@@ -24,12 +24,22 @@ public class ButtonSettings {
 		// prepare preview panel
 		PackageManager pm = context.getPackageManager();
 		try {
-			Resources resSystemUI = pm.getResourcesForApplication(XperiaNavBarButtons.CLASSNAME_SYSTEMUI);
-			mImgHomeButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_home", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgBackButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_back", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgRecentButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_recent", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgMenuButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_menu", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgSearchButton = context.getResources().getDrawable(R.drawable.ic_sysbar_search);
+			Resources resSystemUI = pm
+					.getResourcesForApplication(XperiaNavBarButtons.CLASSNAME_SYSTEMUI);
+			mImgHomeButton = resSystemUI.getDrawable(resSystemUI.getIdentifier(
+					"ic_sysbar_home", "drawable",
+					XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgBackButton = resSystemUI.getDrawable(resSystemUI.getIdentifier(
+					"ic_sysbar_back", "drawable",
+					XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgRecentButton = resSystemUI.getDrawable(resSystemUI
+					.getIdentifier("ic_sysbar_recent", "drawable",
+							XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgMenuButton = resSystemUI.getDrawable(resSystemUI.getIdentifier(
+					"ic_sysbar_menu", "drawable",
+					XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgSearchButton = context.getResources().getDrawable(
+					R.drawable.ic_sysbar_search);
 		} catch (NameNotFoundException e1) {
 			e1.printStackTrace();
 		}

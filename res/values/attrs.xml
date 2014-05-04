@@ -6,7 +6,6 @@
         <attr name="glowBackground" format="integer" />
         <attr name="keyRepeat" format="boolean" />
     </declare-styleable>
-
     <declare-styleable name="TouchListView">
         <attr name="normal_height" format="dimension" />
         <attr name="expanded_height" format="dimension" />

@@ -41,12 +41,10 @@ public class TouchListView extends ListView {
 	private ImageView mDragView;
 	private WindowManager mWindowManager;
 	private WindowManager.LayoutParams mWindowParams;
-	private int mDragPos; // which item is being dragged
-	private int mFirstDragPos; // where was the dragged item originally
-	private int mDragPoint; // at what offset inside the item did the user grab
-							// it
-	private int mCoordOffset; // the difference between screen coordinates and
-								// coordinates in this view
+	private int mDragPos;		// which item is being dragged
+	private int mFirstDragPos;	// where was the dragged item originally
+	private int mDragPoint;		// at what offset inside the item did the user grab it
+	private int mCoordOffset;	// the difference between screen coordinates and coordinates in this view
 	private DragListener mDragListener;
 	private DropListener mDropListener;
 	private RemoveListener mRemoveListener;
@@ -76,12 +74,17 @@ public class TouchListView extends ListView {
 		mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
 		if (attrs != null) {
-			TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.TouchListView, 0, 0);
+			TypedArray a = getContext().obtainStyledAttributes(attrs,
+					R.styleable.TouchListView, 0, 0);
 
-			mItemHeightNormal = a.getDimensionPixelSize(R.styleable.TouchListView_normal_height, 0);
-			mItemHeightExpanded = a.getDimensionPixelSize(R.styleable.TouchListView_expanded_height, mItemHeightNormal);
+			mItemHeightNormal = a.getDimensionPixelSize(
+					R.styleable.TouchListView_normal_height, 0);
+			mItemHeightExpanded = a.getDimensionPixelSize(
+					R.styleable.TouchListView_expanded_height,
+					mItemHeightNormal);
 			grabberId = a.getResourceId(R.styleable.TouchListView_grabber, -1);
-			dragndropBackgroundColor = a.getColor(R.styleable.TouchListView_dragndrop_background, 0x00000000);
+			dragndropBackgroundColor = a.getColor(
+					R.styleable.TouchListView_dragndrop_background, 0x00000000);
 			mRemoveMode = a.getInt(R.styleable.TouchListView_remove_mode, -1);
 
 			a.recycle();
@@ -90,25 +93,29 @@ public class TouchListView extends ListView {
 
 	@Override
 	final public void addHeaderView(View v, Object data, boolean isSelectable) {
-		throw new RuntimeException("Headers are not supported with TouchListView");
+		throw new RuntimeException(
+				"Headers are not supported with TouchListView");
 	}
 
 	@Override
 	final public void addHeaderView(View v) {
-		throw new RuntimeException("Headers are not supported with TouchListView");
+		throw new RuntimeException(
+				"Headers are not supported with TouchListView");
 	}
 
 	@Override
 	final public void addFooterView(View v, Object data, boolean isSelectable) {
 		if (mRemoveMode == SLIDE_LEFT || mRemoveMode == SLIDE_RIGHT) {
-			throw new RuntimeException("Footers are not supported with TouchListView in conjunction with remove_mode");
+			throw new RuntimeException(
+					"Footers are not supported with TouchListView in conjunction with remove_mode");
 		}
 	}
 
 	@Override
 	final public void addFooterView(View v) {
 		if (mRemoveMode == SLIDE_LEFT || mRemoveMode == SLIDE_RIGHT) {
-			throw new RuntimeException("Footers are not supported with TouchListView in conjunction with remove_mode");
+			throw new RuntimeException(
+					"Footers are not supported with TouchListView in conjunction with remove_mode");
 		}
 	}
 
@@ -116,27 +123,31 @@ public class TouchListView extends ListView {
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		if (mRemoveListener != null && mGestureDetector == null) {
 			if (mRemoveMode == FLING) {
-				mGestureDetector = new GestureDetector(getContext(), new SimpleOnGestureListener() {
-					@Override
-					public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-						if (mDragView != null) {
-							if (velocityX > 1000) {
-								Rect r = mTempRect;
-								mDragView.getDrawingRect(r);
-								if (e2.getX() > r.right * 2 / 3) {
-									// fast fling right with release near the
-									// right edge of the screen
-									stopDragging();
-									mRemoveListener.remove(mFirstDragPos);
-									unExpandViews(true);
+				mGestureDetector = new GestureDetector(getContext(),
+						new SimpleOnGestureListener() {
+							@Override
+							public boolean onFling(MotionEvent e1,
+									MotionEvent e2, float velocityX,
+									float velocityY) {
+								if (mDragView != null) {
+									if (velocityX > 1000) {
+										Rect r = mTempRect;
+										mDragView.getDrawingRect(r);
+										if (e2.getX() > r.right * 2 / 3) {
+											// fast fling right with release near the right edge of the screen
+											stopDragging();
+											mRemoveListener
+													.remove(mFirstDragPos);
+											unExpandViews(true);
+										}
+									}
+									// flinging while dragging should have no
+									// effect
+									return true;
 								}
+								return false;
 							}
-							// flinging while dragging should have no effect
-							return true;
-						}
-						return false;
-					}
-				});
+						});
 			}
 		}
 		if (mDragListener != null || mDropListener != null) {
@@ -149,7 +160,8 @@ public class TouchListView extends ListView {
 					break;
 				}
 
-				View item = (View) getChildAt(itemnum - getFirstVisiblePosition());
+				View item = (View) getChildAt(itemnum
+						- getFirstVisiblePosition());
 
 				if (isDraggableRow(item)) {
 					mDragPoint = y - item.getTop();
@@ -165,11 +177,10 @@ public class TouchListView extends ListView {
 
 					if ((r.left < x) && (x < r.right)) {
 						item.setDrawingCacheEnabled(true);
-						// Create a copy of the drawing cache so that it does
-						// not get recycled
-						// by the framework when the list tries to clean up
-						// memory
-						Bitmap bitmap = Bitmap.createBitmap(item.getDrawingCache());
+						// Create a copy of the drawing cache so that it does not get recycled
+						// by the framework when the list tries to clean up memory
+						Bitmap bitmap = Bitmap.createBitmap(item
+								.getDrawingCache());
 						item.setDrawingCacheEnabled(false);
 
 						Rect listBounds = new Rect();
@@ -326,7 +337,8 @@ public class TouchListView extends ListView {
 		if (mGestureDetector != null) {
 			mGestureDetector.onTouchEvent(ev);
 		}
-		if ((mDragListener != null || mDropListener != null) && mDragView != null) {
+		if ((mDragListener != null || mDropListener != null)
+				&& mDragView != null) {
 			int action = ev.getAction();
 			switch (action) {
 			case MotionEvent.ACTION_UP:
@@ -335,18 +347,21 @@ public class TouchListView extends ListView {
 				mDragView.getDrawingRect(r);
 				stopDragging();
 
-				if (mRemoveMode == SLIDE_RIGHT && ev.getX() > r.left + (r.width() * 3 / 4)) {
+				if (mRemoveMode == SLIDE_RIGHT
+						&& ev.getX() > r.left + (r.width() * 3 / 4)) {
 					if (mRemoveListener != null) {
 						mRemoveListener.remove(mFirstDragPos);
 					}
 					unExpandViews(true);
-				} else if (mRemoveMode == SLIDE_LEFT && ev.getX() < r.left + (r.width() / 4)) {
+				} else if (mRemoveMode == SLIDE_LEFT
+						&& ev.getX() < r.left + (r.width() / 4)) {
 					if (mRemoveListener != null) {
 						mRemoveListener.remove(mFirstDragPos);
 					}
 					unExpandViews(true);
 				} else {
-					if (mDropListener != null && mDragPos >= 0 && mDragPos < getCount()) {
+					if (mDropListener != null && mDragPos >= 0
+							&& mDragPos < getCount()) {
 						mDropListener.drop(mFirstDragPos, mDragPos);
 					}
 					unExpandViews(false);
@@ -360,7 +375,8 @@ public class TouchListView extends ListView {
 				dragView(x, y);
 				int itemnum = getItemForPosition(y);
 				if (itemnum >= 0) {
-					if (action == MotionEvent.ACTION_DOWN || itemnum != mDragPos) {
+					if (action == MotionEvent.ACTION_DOWN
+							|| itemnum != mDragPos) {
 						if (mDragListener != null) {
 							mDragListener.drag(mDragPos, itemnum);
 						}
@@ -381,7 +397,8 @@ public class TouchListView extends ListView {
 						if (ref == AdapterView.INVALID_POSITION) {
 							// we hit a divider or an invisible view, check
 							// somewhere else
-							ref = pointToPosition(0, mHeight / 2 + getDividerHeight() + 64);
+							ref = pointToPosition(0, mHeight / 2
+									+ getDividerHeight() + 64);
 						}
 						View v = getChildAt(ref - getFirstVisiblePosition());
 						if (v != null) {
@@ -407,8 +424,10 @@ public class TouchListView extends ListView {
 
 		mWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 		mWindowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-		mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+		mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+				| WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 		mWindowParams.format = PixelFormat.TRANSLUCENT;
 		mWindowParams.windowAnimations = 0;
 
@@ -419,7 +438,8 @@ public class TouchListView extends ListView {
 		v.setImageBitmap(bm);
 		mDragBitmap = bm;
 
-		mWindowManager = (WindowManager) getContext().getSystemService("window");
+		mWindowManager = (WindowManager) getContext()
+				.getSystemService("window");
 		mWindowManager.addView(v, mWindowParams);
 		mDragView = v;
 	}
@@ -445,7 +465,8 @@ public class TouchListView extends ListView {
 
 	private void stopDragging() {
 		if (mDragView != null) {
-			WindowManager wm = (WindowManager) getContext().getSystemService("window");
+			WindowManager wm = (WindowManager) getContext().getSystemService(
+					"window");
 			wm.removeView(mDragView);
 			mDragView.setImageDrawable(null);
 			mDragView = null;

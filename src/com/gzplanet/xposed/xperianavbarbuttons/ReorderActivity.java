@@ -22,7 +22,7 @@ public class ReorderActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reorder);
-		
+
 		Intent intent = getIntent();
 		String[] items = intent.getStringExtra("order_list").split(",");
 		mItems = new ArrayList<String>(Arrays.asList(items));
@@ -44,7 +44,7 @@ public class ReorderActivity extends ListActivity {
 			if (i != mItems.size() - 1)
 				list.append(",");
 		}
-		
+
 		Intent intent = new Intent();
 		intent.putExtra("order_list", list.toString());
 		setResult(RESULT_OK, intent);

@@ -50,12 +50,14 @@ public class XposedSettings extends PreferenceActivity {
 		addPreferencesFromResource(R.xml.preferences);
 
 		// get screen width
-		final Display defaultDisplay = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		final Display defaultDisplay = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
+				.getDefaultDisplay();
 		final Point point = new Point();
 		defaultDisplay.getSize(point);
 		mScreenWidth = point.x;
 
-		String order = getPreferenceManager().getSharedPreferences().getString("pref_order", null);
+		String order = getPreferenceManager().getSharedPreferences().getString(
+				"pref_order", null);
 		mSettings = new ButtonSettings(this, order);
 
 		mShowMenu = mSettings.isShowMenu();
@@ -77,114 +79,148 @@ public class XposedSettings extends PreferenceActivity {
 		getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
 
 		mPrefShowRecent = (CheckBoxPreference) findPreference("pref_show_recent");
-		mPrefShowRecent.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue)
-					mButtonsCount++;
-				else
-					mButtonsCount--;
-				mShowRecent = (Boolean) newValue;
-				mSettings.setShowRecent(mShowRecent);
-				getPreferenceManager().getSharedPreferences().edit().putString("pref_order", mSettings.getOrderListString()).commit();
-				updatePreviewPanel();
-				return true;
-			}
-		});
+		mPrefShowRecent
+				.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference,
+							Object newValue) {
+						if ((Boolean) newValue)
+							mButtonsCount++;
+						else
+							mButtonsCount--;
+						mShowRecent = (Boolean) newValue;
+						mSettings.setShowRecent(mShowRecent);
+						getPreferenceManager()
+								.getSharedPreferences()
+								.edit()
+								.putString("pref_order",
+										mSettings.getOrderListString())
+								.commit();
+						updatePreviewPanel();
+						return true;
+					}
+				});
 
 		mPrefShowMenu = (CheckBoxPreference) findPreference("pref_show_menu");
-		mPrefShowMenu.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue)
-					mButtonsCount++;
-				else
-					mButtonsCount--;
-				mShowMenu = (Boolean) newValue;
-				mSettings.setShowMenu(mShowMenu);
-				getPreferenceManager().getSharedPreferences().edit().putString("pref_order", mSettings.getOrderListString()).commit();
-				updatePreviewPanel();
-				return true;
-			}
-		});
+		mPrefShowMenu
+				.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference,
+							Object newValue) {
+						if ((Boolean) newValue)
+							mButtonsCount++;
+						else
+							mButtonsCount--;
+						mShowMenu = (Boolean) newValue;
+						mSettings.setShowMenu(mShowMenu);
+						getPreferenceManager()
+								.getSharedPreferences()
+								.edit()
+								.putString("pref_order",
+										mSettings.getOrderListString())
+								.commit();
+						updatePreviewPanel();
+						return true;
+					}
+				});
 
 		mPrefShowSearch = (CheckBoxPreference) findPreference("pref_show_search");
-		mPrefShowSearch.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue)
-					mButtonsCount++;
-				else
-					mButtonsCount--;
-				mShowSearch = (Boolean) newValue;
-				mSettings.setShowSearch(mShowSearch);
-				getPreferenceManager().getSharedPreferences().edit().putString("pref_order", mSettings.getOrderListString()).commit();
-				updatePreviewPanel();
-				return true;
-			}
-		});
+		mPrefShowSearch
+				.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference,
+							Object newValue) {
+						if ((Boolean) newValue)
+							mButtonsCount++;
+						else
+							mButtonsCount--;
+						mShowSearch = (Boolean) newValue;
+						mSettings.setShowSearch(mShowSearch);
+						getPreferenceManager()
+								.getSharedPreferences()
+								.edit()
+								.putString("pref_order",
+										mSettings.getOrderListString())
+								.commit();
+						updatePreviewPanel();
+						return true;
+					}
+				});
 
 		mPrefReorder = (Preference) findPreference("pref_reorder");
 
-		mPrefReorder.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(XposedSettings.this, ReorderActivity.class);
-				intent.putExtra("order_list", mSettings.getOrderListString());
-				startActivityForResult(intent, 1);
-				return true;
-			}
-		});
+		mPrefReorder
+				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						Intent intent = new Intent(XposedSettings.this,
+								ReorderActivity.class);
+						intent.putExtra("order_list",
+								mSettings.getOrderListString());
+						startActivityForResult(intent, 1);
+						return true;
+					}
+				});
 
 		mPrefRestartSystemUI = (Preference) findPreference("pref_restart_systemui");
 
-		mPrefRestartSystemUI.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				try {
-					Toast.makeText(XposedSettings.this, "Restarting SystemUI...", Toast.LENGTH_SHORT).show();
+		mPrefRestartSystemUI
+				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						try {
+							Toast.makeText(XposedSettings.this,
+									"Restarting SystemUI...",
+									Toast.LENGTH_SHORT).show();
 
-					final String pkgName = XposedSettings.this.getPackageName();
-					final String pkgFilename = pkgName + "_preferences";
-					final File prefFile = new File(Environment.getDataDirectory(), "data/" + pkgName + "/shared_prefs/" + pkgFilename + ".xml");
-					Log.d("XposedSettings", prefFile.getAbsolutePath());
+							final String pkgName = XposedSettings.this
+									.getPackageName();
+							final String pkgFilename = pkgName + "_preferences";
+							final File prefFile = new File(Environment
+									.getDataDirectory(), "data/" + pkgName
+									+ "/shared_prefs/" + pkgFilename + ".xml");
+							Log.d("XposedSettings", prefFile.getAbsolutePath());
 
-					// make shared preference world-readable
-					Process sh = Runtime.getRuntime().exec("su", null, null);
-					OutputStream os = sh.getOutputStream();
-					os.write(("chmod 664 " + prefFile.getAbsolutePath()).getBytes("ASCII"));
-					os.flush();
-					os.close();
-					try {
-						sh.waitFor();
-					} catch (Exception e) {
-						e.printStackTrace();
+							// make shared preference world-readable
+							Process sh = Runtime.getRuntime().exec("su", null,
+									null);
+							OutputStream os = sh.getOutputStream();
+							os.write(("chmod 664 " + prefFile.getAbsolutePath())
+									.getBytes("ASCII"));
+							os.flush();
+							os.close();
+							try {
+								sh.waitFor();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							// restart SystemUI process
+							sh = Runtime.getRuntime().exec("su", null, null);
+							os = sh.getOutputStream();
+							os.write(("pkill com.android.systemui")
+									.getBytes("ASCII"));
+							os.flush();
+							os.close();
+							try {
+								sh.waitFor();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						return true;
 					}
-
-					// restart SystemUI process
-					sh = Runtime.getRuntime().exec("su", null, null);
-					os = sh.getOutputStream();
-					os.write(("pkill com.android.systemui").getBytes("ASCII"));
-					os.flush();
-					os.close();
-					try {
-						sh.waitFor();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return true;
-			}
-		});
+				});
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			String settings = data.getStringExtra("order_list");
-			getPreferenceManager().getSharedPreferences().edit().putString("pref_order", settings).commit();
+			getPreferenceManager().getSharedPreferences().edit()
+					.putString("pref_order", settings).commit();
 			mSettings = new ButtonSettings(this, settings);
 			updatePreviewPanel();
 		}
@@ -198,7 +234,8 @@ public class XposedSettings extends PreferenceActivity {
 		for (int i = 0; i < 5; i++) {
 			ImageView iv = (ImageView) panel.findViewById(mIconId[i]);
 			if (i < mButtonsCount) {
-				iv.setLayoutParams(new LinearLayout.LayoutParams(mButtonWidth, LinearLayout.LayoutParams.FILL_PARENT, 0.0f));
+				iv.setLayoutParams(new LinearLayout.LayoutParams(mButtonWidth,
+						LinearLayout.LayoutParams.FILL_PARENT, 0.0f));
 				iv.setImageDrawable(mSettings.getButtonDrawable(i));
 				iv.setVisibility(View.VISIBLE);
 			} else {
