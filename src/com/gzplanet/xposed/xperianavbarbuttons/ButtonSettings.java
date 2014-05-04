@@ -14,32 +14,25 @@ public class ButtonSettings {
 	private Drawable mImgRecentButton;
 	private Drawable mImgMenuButton;
 	private Drawable mImgSearchButton;
+	private Drawable mImgPowerButton;
 
 	private boolean mShowMenu = false;
 	private boolean mShowSearch = false;
 	private boolean mShowRecent = false;
+	private boolean mShowPower = false;
 	private ArrayList<String> mOrder = new ArrayList<String>();
 
 	public ButtonSettings(Context context, String orderList) {
 		// prepare preview panel
 		PackageManager pm = context.getPackageManager();
 		try {
-			Resources resSystemUI = pm
-					.getResourcesForApplication(XperiaNavBarButtons.CLASSNAME_SYSTEMUI);
-			mImgHomeButton = resSystemUI.getDrawable(resSystemUI.getIdentifier(
-					"ic_sysbar_home", "drawable",
-					XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgBackButton = resSystemUI.getDrawable(resSystemUI.getIdentifier(
-					"ic_sysbar_back", "drawable",
-					XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgRecentButton = resSystemUI.getDrawable(resSystemUI
-					.getIdentifier("ic_sysbar_recent", "drawable",
-							XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgMenuButton = resSystemUI.getDrawable(resSystemUI.getIdentifier(
-					"ic_sysbar_menu", "drawable",
-					XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
-			mImgSearchButton = context.getResources().getDrawable(
-					R.drawable.ic_sysbar_search);
+			Resources resSystemUI = pm.getResourcesForApplication(XperiaNavBarButtons.CLASSNAME_SYSTEMUI);
+			mImgHomeButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_home", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgBackButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_back", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgRecentButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_recent", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgMenuButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_menu", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
+			mImgSearchButton = context.getResources().getDrawable(R.drawable.ic_sysbar_search);
+			mImgPowerButton = context.getResources().getDrawable(R.drawable.ic_sysbar_power);
 		} catch (NameNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -50,8 +43,10 @@ public class ButtonSettings {
 			mOrder.add("Recent");
 			mOrder.add("Back");
 			mOrder.add("Search");
+			mOrder.add("Power");
 			mShowMenu = true;
 			mShowSearch = true;
+			mShowPower = true;
 		} else {
 			String[] array = orderList.split(",");
 			for (int i = 0; i < array.length; i++) {
@@ -63,6 +58,8 @@ public class ButtonSettings {
 					mShowSearch = true;
 				if ("Recent".equals(array[i]))
 					mShowRecent = true;
+				if ("Power".equals(array[i]))
+					mShowPower = true;
 			}
 		}
 	}
@@ -102,6 +99,18 @@ public class ButtonSettings {
 		else
 			removeButton("Search");
 	}
+
+	public boolean isShowPower() {
+		return mShowPower;
+	}
+
+	public void setShowPower(boolean showPower) {
+		mShowPower = showPower;
+		if (mShowPower)
+			addButton("Power");
+		else
+			removeButton("Power");
+	}	
 
 	private void removeButton(String button) {
 		int pos = mOrder.indexOf(button);
@@ -145,6 +154,9 @@ public class ButtonSettings {
 
 		if ("Search".equals(mOrder.get(index)))
 			return mImgSearchButton;
+
+		if ("Power".equals(mOrder.get(index)))
+			return mImgPowerButton;
 
 		return null;
 	}

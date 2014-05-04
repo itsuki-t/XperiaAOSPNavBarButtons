@@ -16,6 +16,11 @@
         android:key="pref_show_search"
         android:summary="Show search button"
         android:title="Show Search" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_show_power"
+        android:summary="Show power button"
+        android:title="Show Power" />
 
     <Preference
         android:key="pref_reorder"
