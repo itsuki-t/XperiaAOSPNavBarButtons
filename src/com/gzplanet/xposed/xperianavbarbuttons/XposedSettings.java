@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
@@ -153,7 +152,8 @@ public class XposedSettings extends PreferenceActivity {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				Intent intent = new Intent(XposedSettings.this, ReorderActivity.class);
-				intent.putExtra("order_list", mSettings.getOrderListString());
+				String initOrder = mSettings.getInitOrderListString();
+				intent.putExtra("order_list", initOrder);
 				startActivityForResult(intent, 1);
 				return true;
 			}
@@ -206,6 +206,8 @@ public class XposedSettings extends PreferenceActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
+			String[] items = data.getStringExtra("order_list").split(",");
+			mButtonsCount = items.length;
 			String settings = data.getStringExtra("order_list");
 			getPreferenceManager().getSharedPreferences().edit().putString("pref_order", settings).commit();
 			mSettings = new ButtonSettings(this, settings);

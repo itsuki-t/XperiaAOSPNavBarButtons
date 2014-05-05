@@ -136,6 +136,62 @@ public class ButtonSettings {
 		return list.toString();
 	}
 
+	public String getInitOrderListString() {
+		StringBuilder addedList = new StringBuilder();
+		int i=0;
+		boolean mHomeInc = false;
+		boolean mBackInc = false;
+		boolean mRecentInc = false;
+		boolean mMenuInc = false;
+		boolean mSearchInc = false;
+		boolean mPowerInc = false;
+
+		for (i = 0; i < mOrder.size(); i++) {
+			addedList.append(mOrder.get(i));	
+			if (mOrder.get(i).equalsIgnoreCase("Home")) {
+				mHomeInc = true;
+			}else if (mOrder.get(i).equalsIgnoreCase("Back")){
+				mBackInc = true;
+			}else if (mOrder.get(i).equalsIgnoreCase("Recent")){
+				mRecentInc = true;
+			}else if (mOrder.get(i).equalsIgnoreCase("Menu")){
+				mMenuInc = true;
+			}else if (mOrder.get(i).equalsIgnoreCase("Search")){
+				mSearchInc = true;
+			}else if (mOrder.get(i).equalsIgnoreCase("Power")){
+				mPowerInc = true;
+			}
+			if (i != mOrder.size() - 1)
+				addedList.append(",");
+		}
+		if (!mHomeInc) {
+			addedList.append(",");
+			addedList.append("Home");
+		}
+		if (!mBackInc){
+			addedList.append(",");
+			addedList.append("Back");
+		}
+		if (!mRecentInc){
+			addedList.append(",");
+			addedList.append("Recent");
+		}
+		if (!mMenuInc){
+			addedList.append(",");
+			addedList.append("Menu");
+		}
+		if (!mSearchInc){
+			addedList.append(",");
+			addedList.append("Search");
+		}
+		if (!mPowerInc){
+			addedList.append(",");
+			addedList.append("Power");
+		}
+
+		return addedList.toString();
+	}	
+	
 	public Drawable getButtonDrawable(int index) {
 		if (index >= mOrder.size())
 			return null;

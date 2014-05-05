@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.commonsware.cwac.tlv.TouchListView;
@@ -17,6 +19,7 @@ import com.commonsware.cwac.tlv.TouchListView;
 public class ReorderActivity extends ListActivity {
 	private IconicAdapter mAdapter = null;
 	private ArrayList<String> mItems;
+	private ArrayList<Boolean> mItemsUse;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,10 @@ public class ReorderActivity extends ListActivity {
 		Intent intent = getIntent();
 		String[] items = intent.getStringExtra("order_list").split(",");
 		mItems = new ArrayList<String>(Arrays.asList(items));
-
+		mItemsUse = new ArrayList<Boolean>();
+		for (int i = 0; i < mItems.size(); i++) {
+			mItemsUse.add(true);
+		}
 		TouchListView tlv = (TouchListView) getListView();
 		mAdapter = new IconicAdapter();
 		setListAdapter(mAdapter);
@@ -38,11 +44,13 @@ public class ReorderActivity extends ListActivity {
 	@Override
 	public void onBackPressed() {
 		StringBuilder list = new StringBuilder();
-
 		for (int i = 0; i < mItems.size(); i++) {
-			list.append(mItems.get(i));
-			if (i != mItems.size() - 1)
-				list.append(",");
+			if(!mItemsUse.get(i) && mItems.get(i) != "Home" && mItems.get(i) != "Back"){
+			} else{
+				list.append(mItems.get(i));
+				if (i != mItems.size() - 1)
+					list.append(",");
+			}
 		}
 
 		Intent intent = new Intent();
@@ -73,7 +81,7 @@ public class ReorderActivity extends ListActivity {
 			super(ReorderActivity.this, R.layout.sort_list_row, mItems);
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			View row = convertView;
 
 			if (row == null) {
@@ -85,6 +93,20 @@ public class ReorderActivity extends ListActivity {
 			TextView label = (TextView) row.findViewById(R.id.label);
 
 			label.setText(mItems.get(position));
+
+			final CheckBox checkBox = (CheckBox) row.findViewById(R.id.CheckBox1);
+			checkBox.setOnClickListener(new OnClickListener() {
+			    @Override
+			    public void onClick(View arg0) {
+			        final boolean isChecked = checkBox.isChecked();
+			        // Do something here.
+			        if(isChecked) {
+						mItemsUse.set(position,true);
+			        } else {
+						mItemsUse.set(position,false);
+			        }
+			    }
+			});
 
 			return (row);
 		}
