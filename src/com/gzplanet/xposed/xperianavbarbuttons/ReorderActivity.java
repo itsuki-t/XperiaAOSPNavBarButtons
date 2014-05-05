@@ -45,7 +45,7 @@ public class ReorderActivity extends ListActivity {
 	public void onBackPressed() {
 		StringBuilder list = new StringBuilder();
 		for (int i = 0; i < mItems.size(); i++) {
-			if(!mItemsUse.get(i) && mItems.get(i) != "Home" && mItems.get(i) != "Back"){
+			if(!mItemsUse.get(i) && !mItems.get(i).equalsIgnoreCase("Home") && !mItems.get(i).equalsIgnoreCase("Back")){
 			} else{
 				list.append(mItems.get(i));
 				if (i != mItems.size() - 1)

@@ -33,11 +33,6 @@ public class XposedSettings extends PreferenceActivity {
 	boolean mShowRecent;
 	boolean mShowPower;
 
-	CheckBoxPreference mPrefShowRecent;
-	CheckBoxPreference mPrefShowMenu;
-	CheckBoxPreference mPrefShowSearch;
-	CheckBoxPreference mPrefShowPower;
-	CheckBoxPreference mPrefShowAnyApp;
 	Preference mPrefRestartSystemUI;
 	Preference mPrefReorder;
 
@@ -81,70 +76,6 @@ public class XposedSettings extends PreferenceActivity {
 		// are in the same package, they are executed in the context of the
 		// hooked package
 		getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
-
-		mPrefShowRecent = (CheckBoxPreference) findPreference("pref_show_recent");
-		mPrefShowRecent.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue)
-					mButtonsCount++;
-				else
-					mButtonsCount--;
-				mShowRecent = (Boolean) newValue;
-				mSettings.setShowRecent(mShowRecent);
-				getPreferenceManager().getSharedPreferences().edit().putString("pref_order", mSettings.getOrderListString()).commit();
-				updatePreviewPanel();
-				return true;
-			}
-		});
-
-		mPrefShowMenu = (CheckBoxPreference) findPreference("pref_show_menu");
-		mPrefShowMenu.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue)
-					mButtonsCount++;
-				else
-					mButtonsCount--;
-				mShowMenu = (Boolean) newValue;
-				mSettings.setShowMenu(mShowMenu);
-				getPreferenceManager().getSharedPreferences().edit().putString("pref_order", mSettings.getOrderListString()).commit();
-				updatePreviewPanel();
-				return true;
-			}
-		});
-
-		mPrefShowSearch = (CheckBoxPreference) findPreference("pref_show_search");
-		mPrefShowSearch.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue)
-					mButtonsCount++;
-				else
-					mButtonsCount--;
-				mShowSearch = (Boolean) newValue;
-				mSettings.setShowSearch(mShowSearch);
-				getPreferenceManager().getSharedPreferences().edit().putString("pref_order", mSettings.getOrderListString()).commit();
-				updatePreviewPanel();
-				return true;
-			}
-		});
-
-		mPrefShowPower = (CheckBoxPreference) findPreference("pref_show_power");
-		mPrefShowPower.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if ((Boolean) newValue)
-					mButtonsCount++;
-				else
-					mButtonsCount--;
-				mShowPower = (Boolean) newValue;
-				mSettings.setShowPower(mShowPower);
-				getPreferenceManager().getSharedPreferences().edit().putString("pref_order", mSettings.getOrderListString()).commit();
-				updatePreviewPanel();
-				return true;
-			}
-		});
 
 		mPrefReorder = (Preference) findPreference("pref_reorder");
 

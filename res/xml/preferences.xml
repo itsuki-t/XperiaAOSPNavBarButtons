@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="pref_show_recent"
-        android:summary="Show recent apps button"
-        android:title="Show Recent" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="pref_show_menu"
-        android:summary="Show menu button"
-        android:title="Show Menu" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="pref_show_search"
-        android:summary="Show search button"
-        android:title="Show Search" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="pref_show_power"
-        android:summary="Show power button"
-        android:title="Show Power" />
-
     <Preference
         android:key="pref_reorder"
         android:summary="Re-order buttons in NavBar"
