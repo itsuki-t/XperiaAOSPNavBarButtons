@@ -35,18 +35,25 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	private final static String DEF_BUTTONS_ORDER_LIST = "Search,Recent,Back,Home,Menu,Power";
 
 	Context mContext;
-	XModuleResources modRes;
-	private static XSharedPreferences pref;
+	public static XModuleResources modRes;
+	public static XSharedPreferences pref;
 	int mDisabledFlags;
 
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
 		MODULE_PATH = startupParam.modulePath;
+		modRes = XModuleResources.createInstance(MODULE_PATH, null);
 
 		pref = new XSharedPreferences(XperiaNavBarButtons.class.getPackage().getName());
 		// just in case the preference file permission is reset by
 		// recovery/script
 		pref.makeWorldReadable();
+
+		try {
+			ModifyNavigationBar.initZygote(pref);	
+		} catch (Throwable t) {
+			XposedBridge.log(t);
+		}
 	}
 
 	@Override

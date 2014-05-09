@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <Preference
-        android:key="pref_reorder"
-        android:summary="Re-order buttons in NavBar"
-        android:title="Re-order buttons" />
+    <PreferenceCategory android:title="Button Settings" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_show_anyapp"
+            android:summary="Show AnyApp button"
+            android:title="Show AnyApp" />
+        <Preference
+            android:key="pref_select_anyapp"
+            android:summary="Select App for AnyApp button"
+            android:title="Select App"
+            android:dependency="pref_show_anyapp" />
+        
+        <Preference
+            android:key="pref_reorder"
+            android:summary="Select use/unuse button and Re-order"
+            android:title="Re-order buttons" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Dimention Settings" >
+        <ListPreference
+            android:dialogTitle="Navigationbar height"
+            android:entries="@array/nh_entries_list_preference"
+            android:entryValues="@array/nh_entryvalues_list_preference"
+            android:key="nh_list_preference"
+            android:summary=""
+            android:title="Navigationbar height" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Restart SystemUI" >
+    
     <Preference
         android:key="pref_restart_systemui"
         android:summary="Restart SysmteUI process to apply changes immediately.\n\nIf notification bar or NavBar are not displaying correctly or any icons are missing, please reboot your device."
         android:title="Restart SystemUI (Root required)" />
-
+</PreferenceCategory>
 </PreferenceScreen>

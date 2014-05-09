@@ -7,14 +7,16 @@ import java.io.OutputStream;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -33,6 +35,10 @@ public class XposedSettings extends PreferenceActivity {
 	boolean mShowRecent;
 	boolean mShowPower;
 
+	String mNavbarHeightString;
+	String mNavbarHeight;
+	
+	ListPreference mPrefNavibarHeight;
 	Preference mPrefRestartSystemUI;
 	Preference mPrefReorder;
 
@@ -77,6 +83,33 @@ public class XposedSettings extends PreferenceActivity {
 		// hooked package
 		getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
 
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		mNavbarHeightString = sharedPreferences.getString("nh_e_list_preference", "Defaults");
+		mPrefNavibarHeight = (ListPreference) findPreference("nh_list_preference");
+		mPrefNavibarHeight.setSummary("Current Height : "+ mNavbarHeightString);
+
+		mPrefNavibarHeight.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				CharSequence[] entries,entryValues;
+				String strEntries,strEntryValues;
+				int listId = 0;
+
+				if(newValue != null){
+					listId = mPrefNavibarHeight.findIndexOfValue((String) newValue);
+					entries = mPrefNavibarHeight.getEntries();
+					entryValues = mPrefNavibarHeight.getEntryValues();
+					strEntries = (String) entries[listId];
+					strEntryValues = (String) entryValues[listId];
+					getPreferenceManager().getSharedPreferences().edit().putString("nh_e_list_preference", strEntries).commit();
+					getPreferenceManager().getSharedPreferences().edit().putString("nh_ev_list_preference", strEntryValues).commit();
+					preference.setSummary("Current Height : " + strEntries);
+					return true;
+				}
+				return false;
+		      }
+		});
+		
 		mPrefReorder = (Preference) findPreference("pref_reorder");
 
 		mPrefReorder.setOnPreferenceClickListener(new OnPreferenceClickListener() {
