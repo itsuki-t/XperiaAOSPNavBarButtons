@@ -2,22 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="Button Settings" >
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_show_anyapp"
-            android:summary="Show AnyApp button"
-            android:title="Show AnyApp" />
         <Preference
-            android:key="pref_select_anyapp"
-            android:summary="Select App for AnyApp button"
-            android:title="Select App"
-            android:dependency="pref_show_anyapp" />
-        
-        <Preference
-            android:key="pref_reorder"
-            android:summary="Select use/unuse button and Re-order"
-            android:title="Re-order buttons" />
-    </PreferenceCategory>
+            android:key="pref_button_settings"
+            android:summary="NavigationBar button settings"
+            android:title="Button settings" />
+        </PreferenceCategory>
     <PreferenceCategory android:title="Dimention Settings" >
         <ListPreference
             android:dialogTitle="Navigationbar height"

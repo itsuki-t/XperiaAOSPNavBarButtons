@@ -34,13 +34,14 @@ public class XposedSettings extends PreferenceActivity {
 	boolean mShowSearch;
 	boolean mShowRecent;
 	boolean mShowPower;
+	boolean mShowExpand;
 
 	String mNavbarHeightString;
 	String mNavbarHeight;
 	
 	ListPreference mPrefNavibarHeight;
 	Preference mPrefRestartSystemUI;
-	Preference mPrefReorder;
+	Preference mPrefButtonSettings;
 
 	ButtonSettings mSettings;
 
@@ -73,6 +74,9 @@ public class XposedSettings extends PreferenceActivity {
 			mButtonsCount++;
 		mShowPower = mSettings.isShowPower();
 		if (mShowPower)
+			mButtonsCount++;
+		mShowExpand = mSettings.isShowExpand();
+		if (mShowExpand)
 			mButtonsCount++;
 
 		updatePreviewPanel();
@@ -110,14 +114,13 @@ public class XposedSettings extends PreferenceActivity {
 		      }
 		});
 		
-		mPrefReorder = (Preference) findPreference("pref_reorder");
+		mPrefButtonSettings = (Preference) findPreference("pref_button_settings");
 
-		mPrefReorder.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		mPrefButtonSettings.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(XposedSettings.this, ReorderActivity.class);
-				String initOrder = mSettings.getInitOrderListString();
-				intent.putExtra("order_list", initOrder);
+				Intent intent = new Intent(XposedSettings.this, ButtonSettingsActivity.class);
+				intent.putExtra("order_list", mSettings.getOrderListString());
 				startActivityForResult(intent, 1);
 				return true;
 			}
@@ -195,12 +198,4 @@ public class XposedSettings extends PreferenceActivity {
 			}
 		}
 	}
-	
-    private OnPreferenceChangeListener mEditPreferenceListener = new OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            preference.setSummary((String) newValue);
-            return true;
-        }
-    };
 }

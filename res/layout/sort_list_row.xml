@@ -1,28 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="64dip"
-    android:gravity="center_vertical"
-    android:ignoreGravity="@+id/icon" >
+    android:layout_height="72dip"
+    android:gravity="center_vertical" >
 
-    <CheckBox 
-        android:id="@+id/CheckBox1"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/buttonimage"
+        android:layout_width="72dip"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:checked="true" />
-    
-    <TextView
-        android:id="@+id/label"
-        android:layout_width="wrap_content"
+        android:src="@drawable/grabber" />
+
+    <LinearLayout
+        android:id="@+id/LayoutLeft"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/CheckBox1"
+        android:layout_toRightOf="@id/buttonimage"
         android:ellipsize="marquee"
-        android:paddingLeft="9dip"
-        android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical"
+        android:paddingLeft="3dip" >
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+<!--
+        <TextView
+            android:id="@+id/longpress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView2" />
+
+        <TextView
+            android:id="@+id/doubletap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView3" />
+-->
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
@@ -31,5 +50,5 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/grabber" />
-    
+
 </RelativeLayout>

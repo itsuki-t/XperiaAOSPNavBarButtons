@@ -2,5 +2,8 @@
 
     <string name="app_name">Xperia/AOSP NavBar Buttons</string>
     <string name="navbar_preview">NavBar Preview</string>
+    <string name="button_delete_error">%1$s button can\'t delete!</string>
+    <string name="button_already_added_error">%1$s already added!</string>
+    <string name="button_over_max_error">Can\'t add more than six buttons!</string>
 
 </resources>

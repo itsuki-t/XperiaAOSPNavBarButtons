@@ -15,11 +15,13 @@ public class ButtonSettings {
 	private Drawable mImgMenuButton;
 	private Drawable mImgSearchButton;
 	private Drawable mImgPowerButton;
+	private Drawable mImgExpandButton;
 
 	private boolean mShowMenu = false;
 	private boolean mShowSearch = false;
 	private boolean mShowRecent = false;
 	private boolean mShowPower = false;
+	private boolean mShowExpand = false;
 	private ArrayList<String> mOrder = new ArrayList<String>();
 
 	public ButtonSettings(Context context, String orderList) {
@@ -33,6 +35,7 @@ public class ButtonSettings {
 			mImgMenuButton = resSystemUI.getDrawable(resSystemUI.getIdentifier("ic_sysbar_menu", "drawable", XperiaNavBarButtons.CLASSNAME_SYSTEMUI));
 			mImgSearchButton = context.getResources().getDrawable(R.drawable.ic_sysbar_search);
 			mImgPowerButton = context.getResources().getDrawable(R.drawable.ic_sysbar_power);
+			mImgExpandButton = context.getResources().getDrawable(R.drawable.ic_sysbar_expand);
 		} catch (NameNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -47,6 +50,7 @@ public class ButtonSettings {
 			mShowMenu = true;
 			mShowSearch = true;
 			mShowPower = true;
+			mShowExpand = false;
 		} else {
 			String[] array = orderList.split(",");
 			for (int i = 0; i < array.length; i++) {
@@ -60,6 +64,8 @@ public class ButtonSettings {
 					mShowRecent = true;
 				if ("Power".equals(array[i]))
 					mShowPower = true;
+				if ("Expand".equals(array[i]))
+					mShowExpand = true;
 			}
 		}
 	}
@@ -112,6 +118,18 @@ public class ButtonSettings {
 			removeButton("Power");
 	}	
 
+	public boolean isShowExpand() {
+		return mShowExpand;
+	}
+
+	public void setShowExpand(boolean showExpand) {
+		mShowExpand = showExpand;
+		if (mShowExpand)
+			addButton("Expand");
+		else
+			removeButton("Expand");
+	}		
+	
 	private void removeButton(String button) {
 		int pos = mOrder.indexOf(button);
 		if (pos >= 0)
@@ -145,6 +163,7 @@ public class ButtonSettings {
 		boolean mMenuInc = false;
 		boolean mSearchInc = false;
 		boolean mPowerInc = false;
+		boolean mExpandInc = false;
 
 		for (i = 0; i < mOrder.size(); i++) {
 			addedList.append(mOrder.get(i));	
@@ -160,6 +179,8 @@ public class ButtonSettings {
 				mSearchInc = true;
 			}else if (mOrder.get(i).equalsIgnoreCase("Power")){
 				mPowerInc = true;
+			}else if (mOrder.get(i).equalsIgnoreCase("Expand")){
+				mExpandInc = true;
 			}
 			if (i != mOrder.size() - 1)
 				addedList.append(",");
@@ -188,7 +209,11 @@ public class ButtonSettings {
 			addedList.append(",");
 			addedList.append("Power");
 		}
-
+		if (!mExpandInc){
+			addedList.append(",");
+			addedList.append("Expand");
+		}
+		
 		return addedList.toString();
 	}	
 	
@@ -214,6 +239,9 @@ public class ButtonSettings {
 		if ("Power".equals(mOrder.get(index)))
 			return mImgPowerButton;
 
+		if ("Expand".equals(mOrder.get(index)))
+			return mImgExpandButton;
+		
 		return null;
 	}
 }

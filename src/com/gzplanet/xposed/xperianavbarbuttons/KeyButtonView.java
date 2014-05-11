@@ -44,6 +44,10 @@ public class KeyButtonView extends ImageView {
 				if (mCode != 0) {
 					sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.FLAG_LONG_PRESS);
 					sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
+                    if (mCode == KeyEvent.KEYCODE_DPAD_LEFT || mCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                        removeCallbacks(mCheckLongPress);
+                        postDelayed(mCheckLongPress, ViewConfiguration.getKeyRepeatDelay());
+                    }
 				} else {
 					// Just an old-fashioned ImageView
 					performLongClick();
