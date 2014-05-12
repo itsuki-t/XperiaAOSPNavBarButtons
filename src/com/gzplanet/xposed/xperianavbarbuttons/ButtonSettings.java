@@ -16,12 +16,14 @@ public class ButtonSettings {
 	private Drawable mImgSearchButton;
 	private Drawable mImgPowerButton;
 	private Drawable mImgExpandButton;
+	private Drawable mImgSpaceButton;
 
 	private boolean mShowMenu = false;
 	private boolean mShowSearch = false;
 	private boolean mShowRecent = false;
 	private boolean mShowPower = false;
 	private boolean mShowExpand = false;
+	private boolean mShowSpace = false;
 	private ArrayList<String> mOrder = new ArrayList<String>();
 
 	public ButtonSettings(Context context, String orderList) {
@@ -36,6 +38,7 @@ public class ButtonSettings {
 			mImgSearchButton = context.getResources().getDrawable(R.drawable.ic_sysbar_search);
 			mImgPowerButton = context.getResources().getDrawable(R.drawable.ic_sysbar_power);
 			mImgExpandButton = context.getResources().getDrawable(R.drawable.ic_sysbar_expand);
+			mImgSpaceButton = context.getResources().getDrawable(R.drawable.ic_sysbar_space);
 		} catch (NameNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -66,6 +69,8 @@ public class ButtonSettings {
 					mShowPower = true;
 				if ("Expand".equals(array[i]))
 					mShowExpand = true;
+				if ("Space".equals(array[i]))
+					mShowSpace = true;
 			}
 		}
 	}
@@ -128,6 +133,18 @@ public class ButtonSettings {
 			addButton("Expand");
 		else
 			removeButton("Expand");
+	}
+
+	public boolean isShowSpace() {
+		return mShowSpace;
+	}
+
+	public void setShowSpace(boolean showSpace) {
+		mShowSpace = showSpace;
+		if (mShowSpace)
+			addButton("Space");
+		else
+			removeButton("Space");
 	}		
 	
 	private void removeButton(String button) {
@@ -164,6 +181,7 @@ public class ButtonSettings {
 		boolean mSearchInc = false;
 		boolean mPowerInc = false;
 		boolean mExpandInc = false;
+		boolean mSpaceInc = false;
 
 		for (i = 0; i < mOrder.size(); i++) {
 			addedList.append(mOrder.get(i));	
@@ -181,6 +199,8 @@ public class ButtonSettings {
 				mPowerInc = true;
 			}else if (mOrder.get(i).equalsIgnoreCase("Expand")){
 				mExpandInc = true;
+			}else if (mOrder.get(i).equalsIgnoreCase("Space")){
+				mSpaceInc = true;
 			}
 			if (i != mOrder.size() - 1)
 				addedList.append(",");
@@ -213,6 +233,10 @@ public class ButtonSettings {
 			addedList.append(",");
 			addedList.append("Expand");
 		}
+		if (!mSpaceInc){
+			addedList.append(",");
+			addedList.append("Space");
+		}
 		
 		return addedList.toString();
 	}	
@@ -241,6 +265,9 @@ public class ButtonSettings {
 
 		if ("Expand".equals(mOrder.get(index)))
 			return mImgExpandButton;
+
+		if ("Space".equals(mOrder.get(index)))
+			return mImgSpaceButton;
 		
 		return null;
 	}

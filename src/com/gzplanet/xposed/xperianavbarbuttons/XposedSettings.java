@@ -35,6 +35,7 @@ public class XposedSettings extends PreferenceActivity {
 	boolean mShowRecent;
 	boolean mShowPower;
 	boolean mShowExpand;
+	boolean mShowSpace;
 
 	String mNavbarHeightString;
 	String mNavbarHeight;
@@ -77,6 +78,9 @@ public class XposedSettings extends PreferenceActivity {
 			mButtonsCount++;
 		mShowExpand = mSettings.isShowExpand();
 		if (mShowExpand)
+			mButtonsCount++;
+		mShowSpace = mSettings.isShowSpace();
+		if (mShowSpace)
 			mButtonsCount++;
 
 		updatePreviewPanel();

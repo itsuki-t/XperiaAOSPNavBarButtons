@@ -36,6 +36,7 @@ public class ButtonSettingsActivity extends ListActivity {
 	Drawable mImgSearchButton;
 	Drawable mImgPowerButton;
 	Drawable mImgExpandButton;
+	Drawable mImgSpaceButton;
 	Drawable mImgCustomButton;
 	Drawable mImgKillAppButton;
 	Drawable mImgOpenNotificationButton;
@@ -125,7 +126,7 @@ public class ButtonSettingsActivity extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 //		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Custom","Kill App","Open Notifications"};
-		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand"};
+		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand","Space"};
 		AlertDialog.Builder sab = new AlertDialog.Builder(ButtonSettingsActivity.this);   
 		sab.setTitle("Select add button");   
 		sab.setItems(Items, new DialogInterface.OnClickListener(){
@@ -221,6 +222,7 @@ public class ButtonSettingsActivity extends ListActivity {
 		mImgSearchButton = this.getResources().getDrawable(R.drawable.ic_sysbar_search);
 		mImgPowerButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
 		mImgExpandButton = this.getResources().getDrawable(R.drawable.ic_sysbar_expand);
+		mImgSpaceButton = this.getResources().getDrawable(R.drawable.ic_sysbar_space);
 		mImgCustomButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
 		mImgKillAppButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
 		mImgOpenNotificationButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
@@ -247,6 +249,9 @@ public class ButtonSettingsActivity extends ListActivity {
 
 		if ("Expand".equals(buttonName))
 			return mImgExpandButton;
+
+		if ("Space".equals(buttonName))
+			return mImgSpaceButton;
 
 		if ("Custom".equals(buttonName))
 			return mImgCustomButton;

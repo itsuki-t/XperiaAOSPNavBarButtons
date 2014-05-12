@@ -34,7 +34,8 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	private static String MODULE_PATH = null;
 	private final static String DEF_BUTTONS_ORDER_LIST = "Search,Recent,Back,Home,Menu,Power";
 
-	final static int BUTTONACTION_STATUSBAR_ACTION = 999;
+	final static int BUTTONACTION_STATUSBAR_ACTION = 998;
+	final static int BUTTONACTION_DO_NOTHING = 999;
 
 	Context mContext;
 	public static XModuleResources modRes;
@@ -124,6 +125,10 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 								"Expand",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
 										R.drawable.ic_sysbar_expand, BUTTONACTION_STATUSBAR_ACTION, "expand"));
+						viewList.put(
+								"Space",
+								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
+										R.drawable.ic_sysbar_space, BUTTONACTION_DO_NOTHING, "space"));
 
 						rot0NavButtons.removeAllViews();
 						// add selected buttons
@@ -190,7 +195,11 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 						viewList.put(
 								"Expand",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
-										R.drawable.ic_sysbar_expand_land, BUTTONACTION_STATUSBAR_ACTION, "expand"));
+										R.drawable.ic_sysbar_expand, BUTTONACTION_STATUSBAR_ACTION, "expand"));
+						viewList.put(
+								"Space",
+								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
+										R.drawable.ic_sysbar_space, BUTTONACTION_DO_NOTHING, "space"));
 
 						rot90NavButtons.removeAllViews();
 						// add selected buttons
@@ -271,6 +280,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 							final View menuButton = mCurrentView.findViewById(mCurrentView.getResources().getIdentifier("menu", "id", CLASSNAME_SYSTEMUI));
 							final View powerButton = mCurrentView.findViewWithTag("power");
 							final View expandButton = mCurrentView.findViewWithTag("expand");
+							final View spaceButton = mCurrentView.findViewWithTag("space");
 
 							if (!force && mDisabledFlags == disabledFlags)
 								return;
@@ -294,6 +304,9 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 							if (expandButton != null)
 								expandButton.setVisibility(pref.getBoolean("pref_show_expand", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
 										: View.GONE);	
+							if (spaceButton != null)
+								spaceButton.setVisibility(pref.getBoolean("pref_show_space", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
+										: View.GONE);
 						}
 					});
 		} catch (NoSuchMethodError e2) {
