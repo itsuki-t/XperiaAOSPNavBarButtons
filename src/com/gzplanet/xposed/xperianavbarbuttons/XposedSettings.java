@@ -4,10 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.gzplanet.xposed.xperianavbarbuttons.CustomButton.AppListView;
+
+import de.robv.android.xposed.XposedBridge;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,7 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class XposedSettings extends PreferenceActivity {
-
+	private static final String TAG = "XposedSettings";
 	int mScreenWidth;
 	int mButtonWidth;
 	int mButtonsCount = 2;
@@ -35,14 +42,17 @@ public class XposedSettings extends PreferenceActivity {
 	boolean mShowRecent;
 	boolean mShowPower;
 	boolean mShowExpand;
+	boolean mShowCustom;
 	boolean mShowSpace;
 
+	String mCustomAppName;
 	String mNavbarHeightString;
 	String mNavbarHeight;
-	
+
+	Preference mPrefCustomButton;
+	Preference mPrefButtonSettings;
 	ListPreference mPrefNavibarHeight;
 	Preference mPrefRestartSystemUI;
-	Preference mPrefButtonSettings;
 
 	ButtonSettings mSettings;
 
@@ -54,6 +64,7 @@ public class XposedSettings extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		addPreferencesFromResource(R.xml.preferences);
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		// get screen width
 		final Display defaultDisplay = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -79,6 +90,9 @@ public class XposedSettings extends PreferenceActivity {
 		mShowExpand = mSettings.isShowExpand();
 		if (mShowExpand)
 			mButtonsCount++;
+		mShowCustom = mSettings.isShowCustom();
+		if (mShowCustom)
+			mButtonsCount++;
 		mShowSpace = mSettings.isShowSpace();
 		if (mShowSpace)
 			mButtonsCount++;
@@ -91,11 +105,32 @@ public class XposedSettings extends PreferenceActivity {
 		// hooked package
 		getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
 
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		mCustomAppName = sharedPreferences.getString("pref_custom_button_appname", "Not selected");
+		mPrefCustomButton = (Preference) findPreference("pref_custom_button");
+		mPrefCustomButton.setSummary("Current : "+ mCustomAppName);
+		mPrefCustomButton.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(XposedSettings.this, AppListView.class);
+				startActivityForResult(intent, 2);
+				return true;
+			}
+		});		
+
+		mPrefButtonSettings = (Preference) findPreference("pref_button_settings");
+		mPrefButtonSettings.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(XposedSettings.this, ButtonSettingsActivity.class);
+				intent.putExtra("order_list", mSettings.getOrderListString());
+				startActivityForResult(intent, 1);
+				return true;
+			}
+		});
+
 		mNavbarHeightString = sharedPreferences.getString("nh_e_list_preference", "Defaults");
 		mPrefNavibarHeight = (ListPreference) findPreference("nh_list_preference");
 		mPrefNavibarHeight.setSummary("Current Height : "+ mNavbarHeightString);
-
 		mPrefNavibarHeight.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -117,21 +152,8 @@ public class XposedSettings extends PreferenceActivity {
 				return false;
 		      }
 		});
-		
-		mPrefButtonSettings = (Preference) findPreference("pref_button_settings");
-
-		mPrefButtonSettings.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(XposedSettings.this, ButtonSettingsActivity.class);
-				intent.putExtra("order_list", mSettings.getOrderListString());
-				startActivityForResult(intent, 1);
-				return true;
-			}
-		});
 
 		mPrefRestartSystemUI = (Preference) findPreference("pref_restart_systemui");
-
 		mPrefRestartSystemUI.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -176,13 +198,25 @@ public class XposedSettings extends PreferenceActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == Activity.RESULT_OK) {
+		if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
 			String[] items = data.getStringExtra("order_list").split(",");
 			mButtonsCount = items.length;
 			String settings = data.getStringExtra("order_list");
 			getPreferenceManager().getSharedPreferences().edit().putString("pref_order", settings).commit();
 			mSettings = new ButtonSettings(this, settings);
 			updatePreviewPanel();
+		}else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+			String pName = data.getStringExtra("select_custom_app");
+			getPreferenceManager().getSharedPreferences().edit().putString("pref_custom_button_packagename", pName).commit();
+			try{
+				PackageManager pm = getPackageManager();
+				ApplicationInfo ai = pm.getApplicationInfo(pName, 0);
+				String appName = pm.getApplicationLabel(ai).toString();
+				getPreferenceManager().getSharedPreferences().edit().putString("pref_custom_button_appname", appName).commit();
+				mPrefCustomButton.setSummary("Current : "+ appName);
+			}catch(NameNotFoundException e) {
+		        e.printStackTrace();
+		    }
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

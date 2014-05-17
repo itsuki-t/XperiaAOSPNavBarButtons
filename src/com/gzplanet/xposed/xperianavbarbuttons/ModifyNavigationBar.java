@@ -4,23 +4,23 @@ import android.content.res.XResources;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 
-public class ModifyNavigationBar {	
+public class ModifyNavigationBar {
 	private static final String TAG = "ModifyNavigationBar";
 	
-	 public static void initZygote(final XSharedPreferences prefs) {
-			try {
-				final int navBarHeight = Integer.valueOf(prefs.getString("nh_list_preference", "48"));
+	public static void initZygote(final XSharedPreferences prefs) {
+		try {
+			final int navBarHeight = Integer.valueOf(prefs.getString("nh_list_preference", "48"));
 
-				if(navBarHeight != 48) {
-					int navbarSizeId = getNavBarHeightId(navBarHeight);
-					XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height", XperiaNavBarButtons.modRes.fwd(navbarSizeId));
-					XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height_landscape", XperiaNavBarButtons.modRes.fwd(navbarSizeId));
-				}
-			} catch (Exception e) {
-				XposedBridge.log(e);
+			if(navBarHeight != 48) {
+				int navbarSizeId = getNavBarHeightId(navBarHeight);
+				XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height", XperiaNavBarButtons.modRes.fwd(navbarSizeId));
+				XResources.setSystemWideReplacement("android", "dimen", "navigation_bar_height_landscape", XperiaNavBarButtons.modRes.fwd(navbarSizeId));
 			}
+		} catch (Exception e) {
+			XposedBridge.log(e);
 		}
-	 
+	}
+ 
 	private static int getNavBarHeightId(int navBarHeight) {
 		int navbarSizeId;
 

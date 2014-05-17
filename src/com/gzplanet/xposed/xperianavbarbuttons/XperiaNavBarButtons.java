@@ -28,12 +28,15 @@ import de.robv.android.xposed.callbacks.XC_LayoutInflated.LayoutInflatedParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookInitPackageResources, IXposedHookLoadPackage {
+	private static final String TAG = "XperiaNavBarButtons";
+	public static final String PACKAGE_NAME = XperiaNavBarButtons.class.getPackage().getName();
 	final static String CLASSNAME_SYSTEMUI = "com.android.systemui";
 	final static String CLASSNAME_NAVIGATIONBARVIEW = "com.android.systemui.statusbar.phone.NavigationBarView";
 
 	private static String MODULE_PATH = null;
 	private final static String DEF_BUTTONS_ORDER_LIST = "Search,Recent,Back,Home,Menu,Power";
 
+	final static int BUTTONACTION_CUSTOM_ACTION = 997;
 	final static int BUTTONACTION_STATUSBAR_ACTION = 998;
 	final static int BUTTONACTION_DO_NOTHING = 999;
 
@@ -126,6 +129,10 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
 										R.drawable.ic_sysbar_expand, BUTTONACTION_STATUSBAR_ACTION, "expand"));
 						viewList.put(
+								"Custom",
+								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
+										R.drawable.ic_sysbar_custom, BUTTONACTION_CUSTOM_ACTION, "custom"));
+						viewList.put(
 								"Space",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
 										R.drawable.ic_sysbar_space, BUTTONACTION_DO_NOTHING, "space"));
@@ -196,6 +203,10 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 								"Expand",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
 										R.drawable.ic_sysbar_expand, BUTTONACTION_STATUSBAR_ACTION, "expand"));
+						viewList.put(
+								"Custom",
+								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
+										R.drawable.ic_sysbar_custom, BUTTONACTION_CUSTOM_ACTION, "custom"));
 						viewList.put(
 								"Space",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
@@ -280,6 +291,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 							final View menuButton = mCurrentView.findViewById(mCurrentView.getResources().getIdentifier("menu", "id", CLASSNAME_SYSTEMUI));
 							final View powerButton = mCurrentView.findViewWithTag("power");
 							final View expandButton = mCurrentView.findViewWithTag("expand");
+							final View customButton = mCurrentView.findViewWithTag("custom");
 							final View spaceButton = mCurrentView.findViewWithTag("space");
 
 							if (!force && mDisabledFlags == disabledFlags)
@@ -303,6 +315,9 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 										: View.GONE);
 							if (expandButton != null)
 								expandButton.setVisibility(pref.getBoolean("pref_show_expand", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
+										: View.GONE);	
+							if (customButton != null)
+								customButton.setVisibility(pref.getBoolean("pref_show_custom", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
 										: View.GONE);	
 							if (spaceButton != null)
 								spaceButton.setVisibility(pref.getBoolean("pref_show_space", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)

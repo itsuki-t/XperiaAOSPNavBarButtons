@@ -3,10 +3,14 @@
 
     <PreferenceCategory android:title="Button Settings" >
         <Preference
+            android:key="pref_custom_button"
+            android:summary=""
+            android:title="Select Custom button App" />
+        <Preference
             android:key="pref_button_settings"
             android:summary="NavigationBar button settings"
             android:title="Button settings" />
-        </PreferenceCategory>
+    </PreferenceCategory>
     <PreferenceCategory android:title="Dimention Settings" >
         <ListPreference
             android:dialogTitle="Navigationbar height"
@@ -14,13 +18,13 @@
             android:entryValues="@array/nh_entryvalues_list_preference"
             android:key="nh_list_preference"
             android:summary=""
-            android:title="Navigationbar height" />
+            android:title="Navigationbar height (Reboot required)" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Restart SystemUI" >
-    
-    <Preference
-        android:key="pref_restart_systemui"
-        android:summary="Restart SysmteUI process to apply changes immediately.\n\nIf notification bar or NavBar are not displaying correctly or any icons are missing, please reboot your device."
-        android:title="Restart SystemUI (Root required)" />
-</PreferenceCategory>
+        <Preference
+            android:key="pref_restart_systemui"
+            android:summary="Restart SysmteUI process to apply changes immediately.\n\nIf notification bar or NavBar are not displaying correctly or any icons are missing, please reboot your device."
+            android:title="Restart SystemUI (Root required)" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

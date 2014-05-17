@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 public class ButtonSettings {
+	private static final String TAG = "ButtonSettings";
 	private Drawable mImgHomeButton;
 	private Drawable mImgBackButton;
 	private Drawable mImgRecentButton;
@@ -16,6 +17,7 @@ public class ButtonSettings {
 	private Drawable mImgSearchButton;
 	private Drawable mImgPowerButton;
 	private Drawable mImgExpandButton;
+	private Drawable mImgCustomButton;
 	private Drawable mImgSpaceButton;
 
 	private boolean mShowMenu = false;
@@ -23,6 +25,7 @@ public class ButtonSettings {
 	private boolean mShowRecent = false;
 	private boolean mShowPower = false;
 	private boolean mShowExpand = false;
+	private boolean mShowCustom = false;
 	private boolean mShowSpace = false;
 	private ArrayList<String> mOrder = new ArrayList<String>();
 
@@ -38,6 +41,7 @@ public class ButtonSettings {
 			mImgSearchButton = context.getResources().getDrawable(R.drawable.ic_sysbar_search);
 			mImgPowerButton = context.getResources().getDrawable(R.drawable.ic_sysbar_power);
 			mImgExpandButton = context.getResources().getDrawable(R.drawable.ic_sysbar_expand);
+			mImgCustomButton = context.getResources().getDrawable(R.drawable.ic_sysbar_custom);
 			mImgSpaceButton = context.getResources().getDrawable(R.drawable.ic_sysbar_space);
 		} catch (NameNotFoundException e1) {
 			e1.printStackTrace();
@@ -69,6 +73,8 @@ public class ButtonSettings {
 					mShowPower = true;
 				if ("Expand".equals(array[i]))
 					mShowExpand = true;
+				if ("Custom".equals(array[i]))
+					mShowCustom = true;
 				if ("Space".equals(array[i]))
 					mShowSpace = true;
 			}
@@ -135,6 +141,18 @@ public class ButtonSettings {
 			removeButton("Expand");
 	}
 
+	public boolean isShowCustom() {
+		return mShowCustom;
+	}
+
+	public void setShowCustom(boolean showCustom) {
+		mShowCustom = showCustom;
+		if (mShowCustom)
+			addButton("Custom");
+		else
+			removeButton("Custom");
+	}	
+
 	public boolean isShowSpace() {
 		return mShowSpace;
 	}
@@ -170,76 +188,6 @@ public class ButtonSettings {
 
 		return list.toString();
 	}
-
-	public String getInitOrderListString() {
-		StringBuilder addedList = new StringBuilder();
-		int i=0;
-		boolean mHomeInc = false;
-		boolean mBackInc = false;
-		boolean mRecentInc = false;
-		boolean mMenuInc = false;
-		boolean mSearchInc = false;
-		boolean mPowerInc = false;
-		boolean mExpandInc = false;
-		boolean mSpaceInc = false;
-
-		for (i = 0; i < mOrder.size(); i++) {
-			addedList.append(mOrder.get(i));	
-			if (mOrder.get(i).equalsIgnoreCase("Home")) {
-				mHomeInc = true;
-			}else if (mOrder.get(i).equalsIgnoreCase("Back")){
-				mBackInc = true;
-			}else if (mOrder.get(i).equalsIgnoreCase("Recent")){
-				mRecentInc = true;
-			}else if (mOrder.get(i).equalsIgnoreCase("Menu")){
-				mMenuInc = true;
-			}else if (mOrder.get(i).equalsIgnoreCase("Search")){
-				mSearchInc = true;
-			}else if (mOrder.get(i).equalsIgnoreCase("Power")){
-				mPowerInc = true;
-			}else if (mOrder.get(i).equalsIgnoreCase("Expand")){
-				mExpandInc = true;
-			}else if (mOrder.get(i).equalsIgnoreCase("Space")){
-				mSpaceInc = true;
-			}
-			if (i != mOrder.size() - 1)
-				addedList.append(",");
-		}
-		if (!mHomeInc) {
-			addedList.append(",");
-			addedList.append("Home");
-		}
-		if (!mBackInc){
-			addedList.append(",");
-			addedList.append("Back");
-		}
-		if (!mRecentInc){
-			addedList.append(",");
-			addedList.append("Recent");
-		}
-		if (!mMenuInc){
-			addedList.append(",");
-			addedList.append("Menu");
-		}
-		if (!mSearchInc){
-			addedList.append(",");
-			addedList.append("Search");
-		}
-		if (!mPowerInc){
-			addedList.append(",");
-			addedList.append("Power");
-		}
-		if (!mExpandInc){
-			addedList.append(",");
-			addedList.append("Expand");
-		}
-		if (!mSpaceInc){
-			addedList.append(",");
-			addedList.append("Space");
-		}
-		
-		return addedList.toString();
-	}	
 	
 	public Drawable getButtonDrawable(int index) {
 		if (index >= mOrder.size())
@@ -265,6 +213,9 @@ public class ButtonSettings {
 
 		if ("Expand".equals(mOrder.get(index)))
 			return mImgExpandButton;
+
+		if ("Custom".equals(mOrder.get(index)))
+			return mImgCustomButton;
 
 		if ("Space".equals(mOrder.get(index)))
 			return mImgSpaceButton;

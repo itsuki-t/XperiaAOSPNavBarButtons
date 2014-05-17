@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gzplanet.xposed.xperianavbarbuttons"
-    android:versionCode="14"
-    android:versionName="1.4" >
+    android:versionCode="16"
+    android:versionName="1.6" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -25,7 +25,9 @@
         </activity>
         <activity android:name=".ButtonSettingsActivity" >
         </activity>
-
+        <activity android:name=".CustomButton.AppListView" >
+        </activity>
+        
         <meta-data
             android:name="xposedmodule"
             android:value="true" />

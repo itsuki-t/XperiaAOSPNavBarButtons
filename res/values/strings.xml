@@ -5,5 +5,10 @@
     <string name="button_delete_error">%1$s button can\'t delete!</string>
     <string name="button_already_added_error">%1$s already added!</string>
     <string name="button_over_max_error">Can\'t add more than six buttons!</string>
+    <string name="app_loading">Now Loding...</string>
+    <string name="custom_app_not_selected">Custom app not selected!</string>
+    <string name="custom_app_have_not_activity">Custom app can\'t launch!</string>
+    <string name="custom_app_not_found">Custom app not found!</string>
+    <string name="custom_app_not_launch">Custom app can\'t launch!\nPlease check app you selected.</string>
 
 </resources>
