@@ -27,9 +27,6 @@ Now you can add the various buttons and reorder.
      * LongPress : Kill all app (same as "clear all" from recent app panel)  
  - Space
      * No action and no image button
-
-Home and Back button can't remove for safety.
-
 2. Reorder NavigationBar buttons
 3. Change NavigationBar height
 
