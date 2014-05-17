@@ -10,5 +10,8 @@
     <string name="custom_app_have_not_activity">Custom app can\'t launch!</string>
     <string name="custom_app_not_found">Custom app not found!</string>
     <string name="custom_app_not_launch">Custom app can\'t launch!\nPlease check app you selected.</string>
+    <string name="kill_app">Kill foreground app.</string>
+    <string name="kill_target_not_found">Kill app not found!</string>
+    <string name="kill_all_background_app">Kill all app.</string>
 
 </resources>

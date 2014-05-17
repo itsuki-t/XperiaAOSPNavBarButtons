@@ -18,6 +18,7 @@ public class ButtonSettings {
 	private Drawable mImgPowerButton;
 	private Drawable mImgExpandButton;
 	private Drawable mImgCustomButton;
+	private Drawable mImgKillAppButton;
 	private Drawable mImgSpaceButton;
 
 	private boolean mShowMenu = false;
@@ -26,6 +27,7 @@ public class ButtonSettings {
 	private boolean mShowPower = false;
 	private boolean mShowExpand = false;
 	private boolean mShowCustom = false;
+	private boolean mShowKillApp = false;
 	private boolean mShowSpace = false;
 	private ArrayList<String> mOrder = new ArrayList<String>();
 
@@ -42,6 +44,7 @@ public class ButtonSettings {
 			mImgPowerButton = context.getResources().getDrawable(R.drawable.ic_sysbar_power);
 			mImgExpandButton = context.getResources().getDrawable(R.drawable.ic_sysbar_expand);
 			mImgCustomButton = context.getResources().getDrawable(R.drawable.ic_sysbar_custom);
+			mImgKillAppButton = context.getResources().getDrawable(R.drawable.ic_sysbar_killapp);
 			mImgSpaceButton = context.getResources().getDrawable(R.drawable.ic_sysbar_space);
 		} catch (NameNotFoundException e1) {
 			e1.printStackTrace();
@@ -58,6 +61,9 @@ public class ButtonSettings {
 			mShowSearch = true;
 			mShowPower = true;
 			mShowExpand = false;
+			mShowCustom = false;
+			mShowKillApp = false;
+			mShowSpace = false;
 		} else {
 			String[] array = orderList.split(",");
 			for (int i = 0; i < array.length; i++) {
@@ -75,6 +81,8 @@ public class ButtonSettings {
 					mShowExpand = true;
 				if ("Custom".equals(array[i]))
 					mShowCustom = true;
+				if ("Kill App".equals(array[i]))
+					mShowKillApp = true;
 				if ("Space".equals(array[i]))
 					mShowSpace = true;
 			}
@@ -153,6 +161,18 @@ public class ButtonSettings {
 			removeButton("Custom");
 	}	
 
+	public boolean isShowKillApp() {
+		return mShowKillApp;
+	}
+
+	public void setShowKillApp(boolean showKillApp) {
+		mShowKillApp = showKillApp;
+		if (mShowKillApp)
+			addButton("Kill App");
+		else
+			removeButton("Kill App");
+	}	
+	
 	public boolean isShowSpace() {
 		return mShowSpace;
 	}
@@ -216,6 +236,9 @@ public class ButtonSettings {
 
 		if ("Custom".equals(mOrder.get(index)))
 			return mImgCustomButton;
+
+		if ("Kill App".equals(mOrder.get(index)))
+			return mImgKillAppButton;
 
 		if ("Space".equals(mOrder.get(index)))
 			return mImgSpaceButton;

@@ -36,6 +36,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	private static String MODULE_PATH = null;
 	private final static String DEF_BUTTONS_ORDER_LIST = "Search,Recent,Back,Home,Menu,Power";
 
+	final static int BUTTONACTION_KILLAPP_ACTION = 996;
 	final static int BUTTONACTION_CUSTOM_ACTION = 997;
 	final static int BUTTONACTION_STATUSBAR_ACTION = 998;
 	final static int BUTTONACTION_DO_NOTHING = 999;
@@ -133,6 +134,10 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
 										R.drawable.ic_sysbar_custom, BUTTONACTION_CUSTOM_ACTION, "custom"));
 						viewList.put(
+								"Kill App",
+								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
+										R.drawable.ic_sysbar_killapp, BUTTONACTION_KILLAPP_ACTION, "killapp"));
+						viewList.put(
 								"Space",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
 										R.drawable.ic_sysbar_space, BUTTONACTION_DO_NOTHING, "space"));
@@ -207,6 +212,10 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 								"Custom",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
 										R.drawable.ic_sysbar_custom, BUTTONACTION_CUSTOM_ACTION, "custom"));
+						viewList.put(
+								"Kill App",
+								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
+										R.drawable.ic_sysbar_killapp, BUTTONACTION_KILLAPP_ACTION, "killapp"));
 						viewList.put(
 								"Space",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
@@ -292,6 +301,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 							final View powerButton = mCurrentView.findViewWithTag("power");
 							final View expandButton = mCurrentView.findViewWithTag("expand");
 							final View customButton = mCurrentView.findViewWithTag("custom");
+							final View killappButton = mCurrentView.findViewWithTag("killapp");
 							final View spaceButton = mCurrentView.findViewWithTag("space");
 
 							if (!force && mDisabledFlags == disabledFlags)
@@ -318,6 +328,9 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 										: View.GONE);	
 							if (customButton != null)
 								customButton.setVisibility(pref.getBoolean("pref_show_custom", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
+										: View.GONE);	
+							if (killappButton != null)
+								killappButton.setVisibility(pref.getBoolean("pref_show_killapp", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
 										: View.GONE);	
 							if (spaceButton != null)
 								spaceButton.setVisibility(pref.getBoolean("pref_show_space", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)

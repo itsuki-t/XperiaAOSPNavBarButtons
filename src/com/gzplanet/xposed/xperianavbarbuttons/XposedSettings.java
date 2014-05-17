@@ -43,6 +43,7 @@ public class XposedSettings extends PreferenceActivity {
 	boolean mShowPower;
 	boolean mShowExpand;
 	boolean mShowCustom;
+	boolean mShowKillApp;
 	boolean mShowSpace;
 
 	String mCustomAppName;
@@ -92,6 +93,9 @@ public class XposedSettings extends PreferenceActivity {
 			mButtonsCount++;
 		mShowCustom = mSettings.isShowCustom();
 		if (mShowCustom)
+			mButtonsCount++;
+		mShowKillApp = mSettings.isShowKillApp();
+		if (mShowKillApp)
 			mButtonsCount++;
 		mShowSpace = mSettings.isShowSpace();
 		if (mShowSpace)
@@ -213,6 +217,7 @@ public class XposedSettings extends PreferenceActivity {
 				ApplicationInfo ai = pm.getApplicationInfo(pName, 0);
 				String appName = pm.getApplicationLabel(ai).toString();
 				getPreferenceManager().getSharedPreferences().edit().putString("pref_custom_button_appname", appName).commit();
+				XposedBridge.log("put pref");
 				mPrefCustomButton.setSummary("Current : "+ appName);
 			}catch(NameNotFoundException e) {
 		        e.printStackTrace();

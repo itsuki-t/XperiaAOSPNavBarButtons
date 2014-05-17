@@ -38,9 +38,8 @@ public class ButtonSettingsActivity extends ListActivity {
 	Drawable mImgPowerButton;
 	Drawable mImgExpandButton;
 	Drawable mImgCustomButton;
-	Drawable mImgSpaceButton;
 	Drawable mImgKillAppButton;
-	Drawable mImgOpenNotificationButton;
+	Drawable mImgSpaceButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +126,7 @@ public class ButtonSettingsActivity extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 //		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Custom","Kill App","Open Notifications"};
-		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand","Custom","Space"};
+		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand","Custom","Kill App","Space"};
 		AlertDialog.Builder sab = new AlertDialog.Builder(ButtonSettingsActivity.this);   
 		sab.setTitle("Select add button");   
 		sab.setItems(Items, new DialogInterface.OnClickListener(){
@@ -224,9 +223,8 @@ public class ButtonSettingsActivity extends ListActivity {
 		mImgPowerButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
 		mImgExpandButton = this.getResources().getDrawable(R.drawable.ic_sysbar_expand);
 		mImgCustomButton = this.getResources().getDrawable(R.drawable.ic_sysbar_custom);
+		mImgKillAppButton = this.getResources().getDrawable(R.drawable.ic_sysbar_killapp);
 		mImgSpaceButton = this.getResources().getDrawable(R.drawable.ic_sysbar_space);
-		mImgKillAppButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
-		mImgOpenNotificationButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
 	}
 
 	private Drawable getButtonDrawable(String buttonName) {
@@ -254,14 +252,11 @@ public class ButtonSettingsActivity extends ListActivity {
 		if ("Custom".equals(buttonName))
 			return mImgCustomButton;
 
-		if ("Space".equals(buttonName))
-			return mImgSpaceButton;
-
 		if ("Kill App".equals(buttonName))
 			return mImgKillAppButton;
 
-		if ("Open Notifications".equals(buttonName))
-			return mImgOpenNotificationButton;
+		if ("Space".equals(buttonName))
+			return mImgSpaceButton;
 
 		return null;
 	}
