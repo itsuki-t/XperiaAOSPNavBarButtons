@@ -1,6 +1,4 @@
 #Xperia/AOSP NavBar Buttons
-===
-
 This project forked from [itandy's original project.](https://github.com/itandy/XperiaAOSPNavBarButtons "itandy/XperiaAOSPNavBarButtons")
 
 This Xposed module allows you to change the NavigationBar buttons on your Xperia or AOSP devices.  
@@ -13,7 +11,8 @@ Now you can add the various buttons and reorder.
 3. Reboot the phone
 
 ##Features:
-1. Add those button.
+1. Add and remove those button. (max six buttons)  
+ - Recent App
  - Search
  - Menu
  - Power
@@ -28,7 +27,10 @@ Now you can add the various buttons and reorder.
      * LongPress : Kill all app (same as "clear all" from recent app panel)  
  - Space
      * No action and no image button
-2. reorder NavigationBar buttons
+
+Home and Back button can't remove for safety.
+
+2. Reorder NavigationBar buttons
 3. Change NavigationBar height
 
 ## Change log:
