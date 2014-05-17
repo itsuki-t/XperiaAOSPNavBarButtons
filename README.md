@@ -1,18 +1,18 @@
-#Xperia/AOSP NavBar Buttons  (forked from itandy's project)
+#Xperia/AOSP NavBar Buttons
 ===
+
+This project forked from [itandy's original project.](https://github.com/itandy/XperiaAOSPNavBarButtons "itandy/XperiaAOSPNavBarButtons")
 
 This Xposed module allows you to change the NavigationBar buttons on your Xperia or AOSP devices.  
 On stock ROM, there're only three buttons on the NavBar (Back, Home and Recent Apps).  
 Now you can add the various buttons and reorder.
 
 ##Installation instructions:
-===
 1. Install the module
 2. Run Xposed Installer and enable the module "Xperia/AOSP NavBar Buttons"
 3. Reboot the phone
 
 ##Features:
-===
 1. Add those button.
  - Search
  - Menu
