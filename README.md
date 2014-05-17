@@ -1,4 +1,4 @@
-#Xperia/AOSP NavBar Buttons  (branced from itandy's project)
+#Xperia/AOSP NavBar Buttons  (forked from itandy's project)
 ===
 
 This Xposed module allows you to change the NavigationBar buttons on your Xperia or AOSP devices.  
@@ -44,7 +44,7 @@ Now you can add the various buttons and reorder.
  - Change reorder screen.
 * Ver 1.3
  - Add feature to change Navigationbar height.
-* Ver 1.2 (Branched from original)
+* Ver 1.2 (forked from itandy's original project)
  - Add option to show or hide recent app button.
  - Add power button.
  - Change Settings screen.
