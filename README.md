@@ -2,7 +2,7 @@
 This project forked from [itandy's original project.](https://github.com/itandy/XperiaAOSPNavBarButtons "itandy/XperiaAOSPNavBarButtons")
 
 This Xposed module allows you to change the NavigationBar buttons on your Xperia or AOSP devices.  
-On stock ROM, there're only three buttons on the NavBar (Back, Home and Recent Apps).  
+On stock ROM, there're only three buttons on the NavigationBar (Back, Home and Recent Apps).  
 Now you can add the various buttons and reorder.
 
 ##Installation instructions:
@@ -18,13 +18,13 @@ Now you can add the various buttons and reorder.
  - Power
      * Press : same as the physical power button
  - Expand
-     * Press : Expand notification panel
+     * Press : expand notification panel
      * LongPress : collapse notification panel
  - Custom
-     * Press : Launch app you have selected
+     * Press : launch app you have selected
  - Kill App
-     * Press : Kill foreground app  
-     * LongPress : Kill all app (same as "clear all" from recent app panel)  
+     * Press : kill foreground app  
+     * LongPress : kill all app (same as "clear all" from recent app panel)  
  - Space
      * No action and no image button
 2. Reorder NavigationBar buttons
