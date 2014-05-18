@@ -33,6 +33,7 @@ Now you can add the various buttons and reorder.
 ## Change log:
 * Ver 1.7
  - Add kill foreground/all app button.
+ - Add custom app icon to setting screen.
 * Ver 1.6
  - Add cutsom button and option.
 * Ver 1.5

@@ -16,6 +16,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.ListPreference;
@@ -47,6 +48,7 @@ public class XposedSettings extends PreferenceActivity {
 	boolean mShowSpace;
 
 	String mCustomAppName;
+	String mCustomAppPackageName;
 	String mNavbarHeightString;
 	String mNavbarHeight;
 
@@ -110,8 +112,21 @@ public class XposedSettings extends PreferenceActivity {
 		getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
 
 		mCustomAppName = sharedPreferences.getString("pref_custom_button_appname", "Not selected");
+		mCustomAppPackageName = sharedPreferences.getString("pref_custom_button_packagename", null);
 		mPrefCustomButton = (Preference) findPreference("pref_custom_button");
 		mPrefCustomButton.setSummary("Current : "+ mCustomAppName);
+		if(mCustomAppPackageName != null){
+			try {
+				PackageManager pm = getPackageManager();
+				ApplicationInfo appInfo = pm.getApplicationInfo(mCustomAppPackageName, 0);
+				if(appInfo != null){
+					Drawable appIcon = appInfo.loadIcon(pm);
+					mPrefCustomButton.setIcon(appIcon);
+				}
+			} catch (NameNotFoundException e) {
+				XposedBridge.log(e);
+			}
+		}
 		mPrefCustomButton.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -216,9 +231,10 @@ public class XposedSettings extends PreferenceActivity {
 				PackageManager pm = getPackageManager();
 				ApplicationInfo ai = pm.getApplicationInfo(pName, 0);
 				String appName = pm.getApplicationLabel(ai).toString();
+				Drawable appIcon = ai.loadIcon(pm);
 				getPreferenceManager().getSharedPreferences().edit().putString("pref_custom_button_appname", appName).commit();
-				XposedBridge.log("put pref");
 				mPrefCustomButton.setSummary("Current : "+ appName);
+				mPrefCustomButton.setIcon(appIcon);
 			}catch(NameNotFoundException e) {
 		        e.printStackTrace();
 		    }
