@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gzplanet.xposed.xperianavbarbuttons"
-    android:versionCode="17"
-    android:versionName="1.7" >
+    android:versionCode="18"
+    android:versionName="1.8" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -36,6 +36,7 @@
             android:value="2.0*" />
         <meta-data
             android:name="xposeddescription"
+            android:value="@string/xposeddescription" />
             android:value="Modify NavBar buttons for Xperia/AOSP devices" />
     </application>
 

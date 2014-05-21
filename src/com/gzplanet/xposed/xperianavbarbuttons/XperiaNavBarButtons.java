@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.XModuleResources;
 import android.graphics.Point;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -149,6 +150,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 							if (view != null) {
 								view.setVisibility(View.VISIBLE);
 								view.setLayoutParams(new LinearLayout.LayoutParams(buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, 0.0f));
+								view.setPadding(0, 0, 0, 0);
 								rot0NavButtons.addView(view);
 							}
 						}
@@ -191,6 +193,12 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 
 					// handle nav buttions
 					if (rot90NavButtons != null) {
+						// determine if a tablet is in use
+						boolean tabletMode = rot90NavButtons.getOrientation() == LinearLayout.HORIZONTAL;
+
+						if (tabletMode) {
+							rot90NavButtons.setGravity(Gravity.CENTER_HORIZONTAL);
+						}
 						Map<String, View> viewList = new HashMap<String, View>();
 						viewList.put("Back", (View) rot90NavButtons.findViewById(liparam.res.getIdentifier("back", "id", CLASSNAME_SYSTEMUI)));
 						viewList.put("Home", (View) rot90NavButtons.findViewById(liparam.res.getIdentifier("home", "id", CLASSNAME_SYSTEMUI)));
@@ -223,12 +231,24 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 
 						rot90NavButtons.removeAllViews();
 						// add selected buttons
-						for (int i = buttonsCount - 1; i >= 0; i--) {
-							View view = viewList.remove(orderList[i]);
-							if (view != null) {
-								view.setVisibility(View.VISIBLE);
-								view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, buttonWidth, 0.0f));
-								rot90NavButtons.addView(view);
+						if (tabletMode) {
+							for (int i = 0; i < buttonsCount; i++) {
+								View view = viewList.remove(orderList[i]);
+								if (view != null) {
+									view.setVisibility(View.VISIBLE);
+									view.setLayoutParams(new LinearLayout.LayoutParams(buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, 0.0f));
+									view.setPadding(0, 0, 0, 0);
+									rot90NavButtons.addView(view);
+								}
+							}
+						} else {
+							for (int i = buttonsCount - 1; i >= 0; i--) {
+								View view = viewList.remove(orderList[i]);
+								if (view != null) {
+									view.setVisibility(View.VISIBLE);
+									view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, buttonWidth, 0.0f));
+									rot90NavButtons.addView(view);
+								}
 							}
 						}
 
