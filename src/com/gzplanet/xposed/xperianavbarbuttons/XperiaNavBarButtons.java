@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.XModuleResources;
 import android.graphics.Point;
 import android.view.Display;
@@ -31,8 +32,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookInitPackageResources, IXposedHookLoadPackage {
 	private static final String TAG = "XperiaNavBarButtons";
 	public static final String PACKAGE_NAME = XperiaNavBarButtons.class.getPackage().getName();
-	final static String CLASSNAME_SYSTEMUI = "com.android.systemui";
-	final static String CLASSNAME_NAVIGATIONBARVIEW = "com.android.systemui.statusbar.phone.NavigationBarView";
+	public static final String CLASSNAME_SYSTEMUI = "com.android.systemui";
+	public static final String CLASSNAME_NAVIGATIONBARVIEW = "com.android.systemui.statusbar.phone.NavigationBarView";
 
 	private static String MODULE_PATH = null;
 	private final static String DEF_BUTTONS_ORDER_LIST = "Search,Recent,Back,Home,Menu,Power";
@@ -46,6 +47,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	public static XModuleResources modRes;
 	public static XSharedPreferences pref;
 	int mDisabledFlags;
+	Boolean mNavigationBarCanMove;
 
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
@@ -70,17 +72,20 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
 		if (!resparam.packageName.equals(CLASSNAME_SYSTEMUI))
 			return;
-
+		XposedBridge.log("handleInitPackageResources");
 		modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
 		
 		resparam.res.setReplacement("com.android.systemui", "drawable", "ic_sysbar_home", modRes.fwd(R.drawable.ic_sysbar_home));
 		resparam.res.setReplacement("com.android.systemui", "drawable", "ic_sysbar_recent", modRes.fwd(R.drawable.ic_sysbar_recent));
+		resparam.res.setReplacement("com.android.systemui", "drawable", "ic_sysbar_menu", modRes.fwd(R.drawable.ic_sysbar_menu));
+		resparam.res.setReplacement("com.android.systemui", "drawable", "ic_sysbar_back", modRes.fwd(R.drawable.ic_sysbar_back));
 
 		resparam.res.hookLayout(CLASSNAME_SYSTEMUI, "layout", "navigation_bar", new XC_LayoutInflated() {
 			@Override
 			public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
 				int buttonsCount;
 				int screenWidth;
+				int screenHeight;
 				int buttonWidth;
 
 				pref.reload();
@@ -93,8 +98,17 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 				final Point point = new Point();
 				defaultDisplay.getSize(point);
 				screenWidth = point.x;
-				buttonWidth = Math.round((float) screenWidth / (float) buttonsCount);
-				XposedBridge.log(String.format("screenWidth:%d, buttonWidth:%d", screenWidth, buttonWidth));
+				screenHeight = point.y;
+
+				Configuration config = mContext.getResources().getConfiguration();
+				if (config.orientation == Configuration.ORIENTATION_PORTRAIT) { 
+					buttonWidth = Math.round((float) screenWidth / (float) buttonsCount);
+				} else if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+					buttonWidth = Math.round((float) screenHeight / (float) buttonsCount);
+				} else {
+					buttonWidth = Math.round((float) screenWidth / (float) buttonsCount);
+				}
+				XposedBridge.log(String.format("screenWidth:%d, screenHeight:%d, buttonWidth:%d", screenWidth, screenHeight, buttonWidth));
 
 				FrameLayout rot0 = (FrameLayout) liparam.view.findViewById(liparam.res.getIdentifier("rot0", "id", CLASSNAME_SYSTEMUI));
 				FrameLayout rot90 = (FrameLayout) liparam.view.findViewById(liparam.res.getIdentifier("rot90", "id", CLASSNAME_SYSTEMUI));
@@ -294,7 +308,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
 		if (!lpparam.packageName.equals(CLASSNAME_SYSTEMUI))
 			return;
-
+		XposedBridge.log("handleLoadPackage");
 		// replace setDisabledFlags method
 		try {
 			XposedHelpers.findMethodExact(CLASSNAME_NAVIGATIONBARVIEW, lpparam.classLoader, "setDisabledFlags", int.class, boolean.class);

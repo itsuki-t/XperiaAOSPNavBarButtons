@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.gzplanet.xposed.xperianavbarbuttons.CustomButton.AppListView;
+import com.gzplanet.xposed.xperianavbarbuttons.Util.Utils;
 
 import de.robv.android.xposed.XposedBridge;
 
@@ -15,10 +16,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -26,6 +31,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -115,13 +121,20 @@ public class XposedSettings extends PreferenceActivity {
 		mCustomAppPackageName = sharedPreferences.getString("pref_custom_button_packagename", null);
 		mPrefCustomButton = (Preference) findPreference("pref_custom_button");
 		mPrefCustomButton.setSummary("Current : "+ mCustomAppName);
+		// Set AppIcon
 		if(mCustomAppPackageName != null){
 			try {
 				PackageManager pm = getPackageManager();
 				ApplicationInfo appInfo = pm.getApplicationInfo(mCustomAppPackageName, 0);
 				if(appInfo != null){
 					Drawable appIcon = appInfo.loadIcon(pm);
-					mPrefCustomButton.setIcon(appIcon);
+		            if (appIcon != null) {
+		            	Bitmap bitmap = Utils.drawableToBitmap(appIcon);
+		                int appIconSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, this.getResources().getDisplayMetrics());
+		            	bitmap = Bitmap.createScaledBitmap(bitmap, appIconSizePx, appIconSizePx, false);
+		            	appIcon = new BitmapDrawable(this.getResources(), bitmap);
+						mPrefCustomButton.setIcon(appIcon);
+		            }
 				}
 			} catch (NameNotFoundException e) {
 				XposedBridge.log(e);
@@ -230,11 +243,19 @@ public class XposedSettings extends PreferenceActivity {
 			try{
 				PackageManager pm = getPackageManager();
 				ApplicationInfo ai = pm.getApplicationInfo(pName, 0);
+				// Set AppName
 				String appName = pm.getApplicationLabel(ai).toString();
-				Drawable appIcon = ai.loadIcon(pm);
 				getPreferenceManager().getSharedPreferences().edit().putString("pref_custom_button_appname", appName).commit();
 				mPrefCustomButton.setSummary("Current : "+ appName);
-				mPrefCustomButton.setIcon(appIcon);
+				// Set AppIcon
+				Drawable appIcon = ai.loadIcon(pm);
+	            if (appIcon != null) {
+	            	Bitmap bitmap = Utils.drawableToBitmap(appIcon);
+	                int appIconSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, this.getResources().getDisplayMetrics());
+	            	bitmap = Bitmap.createScaledBitmap(bitmap, appIconSizePx, appIconSizePx, false);
+	            	appIcon = new BitmapDrawable(this.getResources(), bitmap);
+					mPrefCustomButton.setIcon(appIcon);
+	            }
 			}catch(NameNotFoundException e) {
 		        e.printStackTrace();
 		    }
