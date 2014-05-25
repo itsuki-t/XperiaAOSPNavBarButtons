@@ -61,6 +61,7 @@ public class XposedSettings extends PreferenceActivity {
 	Preference mPrefCustomButton;
 	Preference mPrefButtonSettings;
 	ListPreference mPrefNavibarHeight;
+	CheckBoxPreference mPrefNavBarBottom;
 	Preference mPrefRestartSystemUI;
 
 	ButtonSettings mSettings;
@@ -185,6 +186,15 @@ public class XposedSettings extends PreferenceActivity {
 		      }
 		});
 
+		mPrefNavBarBottom = (CheckBoxPreference) findPreference("pref_navbar_always_bottom");
+		mPrefNavBarBottom.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				getPreferenceManager().getSharedPreferences().edit().putBoolean("pref_navbar_always_bottom", (Boolean)newValue).commit();
+				return true;
+			}
+		});		
+		
 		mPrefRestartSystemUI = (Preference) findPreference("pref_restart_systemui");
 		mPrefRestartSystemUI.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override

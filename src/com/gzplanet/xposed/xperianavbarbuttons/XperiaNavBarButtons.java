@@ -33,6 +33,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	private static final String TAG = "XperiaNavBarButtons";
 	public static final String PACKAGE_NAME = XperiaNavBarButtons.class.getPackage().getName();
 	public static final String CLASSNAME_SYSTEMUI = "com.android.systemui";
+	public static final String CLASS_PHONE_WINDOW_MANAGER = "com.android.internal.policy.impl.PhoneWindowManager";
 	public static final String CLASSNAME_NAVIGATIONBARVIEW = "com.android.systemui.statusbar.phone.NavigationBarView";
 
 	private static String MODULE_PATH = null;
@@ -105,6 +106,10 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 					buttonWidth = Math.round((float) screenWidth / (float) buttonsCount);
 				} else if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 					buttonWidth = Math.round((float) screenHeight / (float) buttonsCount);
+					Boolean setNavigationBarAlwaysBottom = pref.getBoolean("pref_navbar_always_bottom", false);
+					if(setNavigationBarAlwaysBottom){
+						buttonWidth = Math.round((float) screenWidth / (float) buttonsCount);
+					}
 				} else {
 					buttonWidth = Math.round((float) screenWidth / (float) buttonsCount);
 				}
