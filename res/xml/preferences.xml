@@ -21,12 +21,6 @@
             android:key="nh_list_preference"
             android:summary=""
             android:title="Navigationbar height" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_navbar_always_bottom"
-            android:summary="Show NavigationBar on bottom for landscape."
-            android:title="Show always on bottom" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Restart SystemUI" >
         <Preference

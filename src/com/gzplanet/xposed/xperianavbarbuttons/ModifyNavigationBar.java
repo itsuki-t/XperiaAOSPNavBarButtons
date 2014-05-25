@@ -26,41 +26,6 @@ public class ModifyNavigationBar {
 		} catch (Exception e) {
 			XposedBridge.log(e);
 		}
-		// Show NavigationBar always bottom
-		try{
-			Boolean setNavigationBarAlwaysBottom = prefs.getBoolean("pref_navbar_always_bottom", false);
-			if(setNavigationBarAlwaysBottom){
-				XposedHelpers.findAndHookMethod(XperiaNavBarButtons.CLASS_PHONE_WINDOW_MANAGER, null, "setInitialDisplaySize",
-						Display.class, int.class, int.class, int.class, new XC_MethodHook() {
-					@Override
-					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-						XposedHelpers.setBooleanField(param.thisObject, "mNavigationBarCanMove", false);
-					}
-				});
-				XposedHelpers.findAndHookMethod(Resources.class, "loadXmlResourceParser",
-						String.class, int.class, int.class, String.class, new XC_MethodReplacement() {
-					@Override
-					protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-						final String originalResPath = (String) param.args[0];
-						try {
-							if ("res/layout/navigation_bar.xml".equals(param.args[0])) {
-								param.args[0] = "res/layout-sw600dp/navigation_bar.xml";
-							} else if ("res/layout/status_bar_search_panel.xml".equals(param.args[0]) ||
-									"res/layout-land/status_bar_search_panel.xml".equals(param.args[0])) {
-								param.args[0] = "res/layout-sw600dp/status_bar_search_panel.xml";
-							}
-							return XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-						} catch (Throwable t) {
-							XposedBridge.log("loadXmlResourceParser throwing exception. Invoking original method.");
-							param.args[0] = originalResPath;
-							return XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-						}
-					}
-				});
-			}
-		} catch(Throwable t) {
-			XposedBridge.log(t);
-		}
 	}
  
 	private static int getNavBarHeightId(int navBarHeight) {
