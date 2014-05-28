@@ -72,7 +72,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
 		if (!resparam.packageName.equals(CLASSNAME_SYSTEMUI))
 			return;
-		XposedBridge.log("handleInitPackageResources");
+
 		modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
 		
 		resparam.res.setReplacement("com.android.systemui", "drawable", "ic_sysbar_home", modRes.fwd(R.drawable.ic_sysbar_home));
@@ -308,7 +308,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
 		if (!lpparam.packageName.equals(CLASSNAME_SYSTEMUI))
 			return;
-		XposedBridge.log("handleLoadPackage");
+
 		// replace setDisabledFlags method
 		try {
 			XposedHelpers.findMethodExact(CLASSNAME_NAVIGATIONBARVIEW, lpparam.classLoader, "setDisabledFlags", int.class, boolean.class);

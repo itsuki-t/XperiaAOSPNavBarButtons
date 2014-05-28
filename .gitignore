@@ -18,6 +18,8 @@ local.properties
 .loadpath
 *.properties
 /.gitignore
+proguard/
+/proguard-project.txt
 
 # External tool builders
 .externalToolBuilders/
