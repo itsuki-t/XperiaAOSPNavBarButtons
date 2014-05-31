@@ -1,4 +1,4 @@
-package com.gzplanet.xposed.xperianavbarbuttons.CustomButton;
+package com.gzplanet.xposed.xperianavbarbuttons.Buttons.CustomButton;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AppDataAdapter extends ArrayAdapter<AppData> {
+	@SuppressWarnings("unused")
+	private static final String TAG = "AppDataAdapter";
 	private LayoutInflater layoutInflater_;
 
 	public AppDataAdapter(Context context, int textViewResourceId, List<AppData> objects) {
@@ -38,7 +40,7 @@ public class AppDataAdapter extends ArrayAdapter<AppData> {
 
 		TextView textView2;
 		textView2 = (TextView) convertView.findViewById(R.id.textView2);
-		textView2.setText(item.getPackageName());
+		textView2.setText(item.getAppPackageName());
 
 		return convertView;
 	}

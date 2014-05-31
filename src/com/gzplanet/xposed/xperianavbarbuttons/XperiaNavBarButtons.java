@@ -30,6 +30,7 @@ import de.robv.android.xposed.callbacks.XC_LayoutInflated.LayoutInflatedParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookInitPackageResources, IXposedHookLoadPackage {
+	@SuppressWarnings("unused")
 	private static final String TAG = "XperiaNavBarButtons";
 	public static final String PACKAGE_NAME = XperiaNavBarButtons.class.getPackage().getName();
 	public static final String CLASSNAME_SYSTEMUI = "com.android.systemui";
@@ -149,7 +150,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
 										R.drawable.ic_sysbar_custom, BUTTONACTION_CUSTOM_ACTION, "custom"));
 						viewList.put(
-								"Kill App",
+								"KillApp",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight",
 										R.drawable.ic_sysbar_killapp, BUTTONACTION_KILLAPP_ACTION, "killapp"));
 						viewList.put(
@@ -235,7 +236,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
 										R.drawable.ic_sysbar_custom, BUTTONACTION_CUSTOM_ACTION, "custom"));
 						viewList.put(
-								"Kill App",
+								"KillApp",
 								createButtonView(liparam, buttonWidth, LinearLayout.LayoutParams.FILL_PARENT, "ic_sysbar_highlight_land",
 										R.drawable.ic_sysbar_killapp, BUTTONACTION_KILLAPP_ACTION, "killapp"));
 						viewList.put(

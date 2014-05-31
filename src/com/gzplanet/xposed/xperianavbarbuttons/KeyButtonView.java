@@ -22,6 +22,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 
 public class KeyButtonView extends ImageView {
+	@SuppressWarnings("unused")
 	private static final String TAG = "KeyButtonView";
 
 	final float GLOW_MAX_SCALE_FACTOR = 1.8f;
@@ -159,6 +160,7 @@ public class KeyButtonView extends ImageView {
 		return mGlowScale;
 	}
 
+	@SuppressWarnings("unused")
 	public void setGlowScale(float x) {
 		if (mGlowBG == null)
 			return;

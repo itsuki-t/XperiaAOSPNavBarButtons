@@ -1,40 +1,35 @@
-package com.gzplanet.xposed.xperianavbarbuttons.CustomButton;
+package com.gzplanet.xposed.xperianavbarbuttons.Buttons.CustomButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.gzplanet.xposed.xperianavbarbuttons.R;
-import com.gzplanet.xposed.xperianavbarbuttons.XposedSettings;
+
+import de.robv.android.xposed.XposedBridge;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class AppListView extends Activity implements OnItemClickListener  {
+	@SuppressWarnings("unused")
 	private static final String TAG = "AppListView";
 	private ListView listView = null;
 	private AppData appData;
 	private AppDataAdapter appDataAdapter = null;
-	private Drawable icon = null;
+	private Drawable appIcon = null;
+	@SuppressWarnings("unused")
 	private AsyncTask<Void, Void, ArrayList<AppData>> mAsyncTask;
 	private ProgressDialog mProgressDialog;	
  	
@@ -71,18 +66,18 @@ public class AppListView extends Activity implements OnItemClickListener  {
                     // Exclude this app
                     if (ai.packageName.equals(AppListView.this.getPackageName())) continue;
         			appData = new AppData();
-        			appData.setPackageName(ai.packageName);
+        			appData.setAppPackageName(ai.packageName);
         			if (ai.loadLabel(pm).toString() != null) {
         				appData.setAppName(ai.loadLabel(pm).toString());
         			} else {
         				appData.setAppName("NoName");
         			}
         			try {
-        				icon = pm.getApplicationIcon(ai.packageName);
+        				appIcon = pm.getApplicationIcon(ai.packageName);
         			} catch (NameNotFoundException e) {
-        				e.printStackTrace();
+        				XposedBridge.log(e);
         			}
-        			appData.setAppIcon(icon);
+        			appData.setAppIcon(appIcon);
 
         			objects.add(appData);
         			appDataAdapter = new AppDataAdapter(AppListView.this, 0, objects);
@@ -103,7 +98,6 @@ public class AppListView extends Activity implements OnItemClickListener  {
 		}.execute();
 	}
 	
-
     private void showProgressDialog() {
         mProgressDialog = new ProgressDialog(AppListView.this);
         mProgressDialog.setMessage(getString(R.string.app_loading));
@@ -123,24 +117,10 @@ public class AppListView extends Activity implements OnItemClickListener  {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ListView listView = (ListView) parent;
         appData = (AppData) listView.getItemAtPosition(position);
-        String pName = appData.getPackageName();
+        String appPackageName = appData.getAppPackageName();
 		Intent intent = new Intent();
-		intent.putExtra("select_custom_app", pName);
+		intent.putExtra("select_custom_app", appPackageName);
 		setResult(RESULT_OK, intent);
-		finish();        
+		finish();
     }
-        
-    public void saveSelectedAppInfo( String packageName ){
-    	SharedPreferences pref = getSharedPreferences( "pref_custom_button", Context.MODE_PRIVATE );
-        Editor editor = pref.edit();
-        editor.putString( "selected_App_PackageName", packageName );
-        editor.commit();
-    }
-    
-	public String getSelectedAppInfo(){
-    	SharedPreferences prefs = getSharedPreferences("pref_custom_button", Context.MODE_PRIVATE);
-    	String pName = prefs.getString("selected_App_PackageName", "");
-    	return pName;
-    }
-	
 }

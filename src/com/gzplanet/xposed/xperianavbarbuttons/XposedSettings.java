@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.gzplanet.xposed.xperianavbarbuttons.CustomButton.AppListView;
+import com.gzplanet.xposed.xperianavbarbuttons.Buttons.CustomButton.AppListView;
 import com.gzplanet.xposed.xperianavbarbuttons.Util.Utils;
 
 import de.robv.android.xposed.XposedBridge;
@@ -17,13 +17,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -40,18 +38,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class XposedSettings extends PreferenceActivity {
+	@SuppressWarnings("unused")
 	private static final String TAG = "XposedSettings";
 	int mScreenWidth;
 	int mButtonWidth;
 	int mButtonsCount = 2;
-	boolean mShowMenu;
-	boolean mShowSearch;
-	boolean mShowRecent;
-	boolean mShowPower;
-	boolean mShowExpand;
-	boolean mShowCustom;
-	boolean mShowKillApp;
-	boolean mShowSpace;
 
 	String mCustomAppName;
 	String mCustomAppPackageName;
@@ -83,31 +74,8 @@ public class XposedSettings extends PreferenceActivity {
 
 		String order = getPreferenceManager().getSharedPreferences().getString("pref_order", null);
 		mSettings = new ButtonSettings(this, order);
-
-		mShowMenu = mSettings.isShowMenu();
-		if (mShowMenu)
-			mButtonsCount++;
-		mShowSearch = mSettings.isShowSearch();
-		if (mShowSearch)
-			mButtonsCount++;
-		mShowRecent = mSettings.isShowRecent();
-		if (mShowRecent)
-			mButtonsCount++;
-		mShowPower = mSettings.isShowPower();
-		if (mShowPower)
-			mButtonsCount++;
-		mShowExpand = mSettings.isShowExpand();
-		if (mShowExpand)
-			mButtonsCount++;
-		mShowCustom = mSettings.isShowCustom();
-		if (mShowCustom)
-			mButtonsCount++;
-		mShowKillApp = mSettings.isShowKillApp();
-		if (mShowKillApp)
-			mButtonsCount++;
-		mShowSpace = mSettings.isShowSpace();
-		if (mShowSpace)
-			mButtonsCount++;
+		mButtonsCount = mSettings.mNavBarButton.getValueOfFlagIsTrue();
+		Log.d(TAG,"mButtonsCount:"+Integer.toString(mButtonsCount));
 
 		updatePreviewPanel();
 
@@ -206,7 +174,7 @@ public class XposedSettings extends PreferenceActivity {
 					try {
 						sh.waitFor();
 					} catch (Exception e) {
-						e.printStackTrace();
+						XposedBridge.log(e);
 					}
 
 					// restart SystemUI process
@@ -218,10 +186,10 @@ public class XposedSettings extends PreferenceActivity {
 					try {
 						sh.waitFor();
 					} catch (Exception e) {
-						e.printStackTrace();
+						XposedBridge.log(e);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					XposedBridge.log(e);
 				}
 				return true;
 			}
@@ -257,7 +225,7 @@ public class XposedSettings extends PreferenceActivity {
 					mPrefCustomButton.setIcon(appIcon);
 	            }
 			}catch(NameNotFoundException e) {
-		        e.printStackTrace();
+				XposedBridge.log(e);
 		    }
 		}
 		super.onActivityResult(requestCode, resultCode, data);

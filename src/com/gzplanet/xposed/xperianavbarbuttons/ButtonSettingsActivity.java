@@ -7,9 +7,7 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,22 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.commonsware.cwac.tlv.TouchListView;
+import com.gzplanet.xposed.xperianavbarbuttons.Buttons.NavBarButton;
 
 public class ButtonSettingsActivity extends ListActivity {
+	@SuppressWarnings("unused")
 	private static final String TAG = "ButtonSettingsActivity";
 	private IconicAdapter mAdapter = null;
 	private ArrayList<String> mItems;
-	private ArrayList<Boolean> mItemsUse;
-	Drawable mImgHomeButton;
-	Drawable mImgBackButton;
-	Drawable mImgRecentButton;
-	Drawable mImgMenuButton;
-	Drawable mImgSearchButton;
-	Drawable mImgPowerButton;
-	Drawable mImgExpandButton;
-	Drawable mImgCustomButton;
-	Drawable mImgKillAppButton;
-	Drawable mImgSpaceButton;
+	NavBarButton mNavBarButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +38,21 @@ public class ButtonSettingsActivity extends ListActivity {
 		getActionBar().setTitle("Button Settings");
 		setContentView(R.layout.reorder);
 
-		setButtonImage();
+		// Create Buttons
+		mNavBarButton = new NavBarButton(getApplicationContext());
+		mNavBarButton.createButton("Home",1);
+		mNavBarButton.createButton("Back",1);
+		mNavBarButton.createButton("Recent",1);
+		mNavBarButton.createButton("Menu",1);
+		mNavBarButton.createButton("Search",2);
+		mNavBarButton.createButton("Power",2);
+		mNavBarButton.createButton("Expand",2);
+		mNavBarButton.createButton("Custom",2);
+		mNavBarButton.createButton("KillApp",2);
+		mNavBarButton.createButton("Space",2);
 		Intent intent = getIntent();
 		String[] items = intent.getStringExtra("order_list").split(",");
 		mItems = new ArrayList<String>(Arrays.asList(items));
-		mItemsUse = new ArrayList<Boolean>();
-		for (int i = 0; i < mItems.size(); i++) {
-			mItemsUse.add(true);
-		}
 		TouchListView tlv = (TouchListView) getListView();
 		mAdapter = new IconicAdapter();
 		setListAdapter(mAdapter);
@@ -125,8 +122,8 @@ public class ButtonSettingsActivity extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-//		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Custom","Kill App","Open Notifications"};
-		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand","Custom","Kill App","Space"};
+//		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Custom","KillApp","Open Notifications"};
+		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand","Custom","KillApp","Space"};
 		AlertDialog.Builder sab = new AlertDialog.Builder(ButtonSettingsActivity.this);   
 		sab.setTitle("Select add button");   
 		sab.setItems(Items, new DialogInterface.OnClickListener(){
@@ -204,60 +201,11 @@ public class ButtonSettingsActivity extends ListActivity {
 
 				row = inflater.inflate(R.layout.sort_list_row, parent, false);
 			}
-
 			TextView label = (TextView) row.findViewById(R.id.label);
 			ImageView iv = (ImageView) row.findViewById(R.id.buttonimage);
 			label.setText(mItems.get(position));
-			iv.setImageDrawable(getButtonDrawable(mItems.get(position)));
-
+			iv.setImageDrawable(mNavBarButton.getButtonImage(mItems.get(position)));
 			return (row);
 		}
-	}
-
-	private void setButtonImage(){
-		mImgHomeButton = this.getResources().getDrawable(R.drawable.ic_sysbar_home);
-		mImgBackButton = this.getResources().getDrawable(R.drawable.ic_sysbar_back);
-		mImgRecentButton = this.getResources().getDrawable(R.drawable.ic_sysbar_recent);
-		mImgMenuButton = this.getResources().getDrawable(R.drawable.ic_sysbar_menu);
-		mImgSearchButton = this.getResources().getDrawable(R.drawable.ic_sysbar_search);
-		mImgPowerButton = this.getResources().getDrawable(R.drawable.ic_sysbar_power);
-		mImgExpandButton = this.getResources().getDrawable(R.drawable.ic_sysbar_expand);
-		mImgCustomButton = this.getResources().getDrawable(R.drawable.ic_sysbar_custom);
-		mImgKillAppButton = this.getResources().getDrawable(R.drawable.ic_sysbar_killapp);
-		mImgSpaceButton = this.getResources().getDrawable(R.drawable.ic_sysbar_space);
-	}
-
-	private Drawable getButtonDrawable(String buttonName) {
-		if ("Home".equals(buttonName))
-			return mImgHomeButton;
-
-		if ("Back".equals(buttonName))
-			return mImgBackButton;
-
-		if ("Recent".equals(buttonName))
-			return mImgRecentButton;
-
-		if ("Menu".equals(buttonName))
-			return mImgMenuButton;
-
-		if ("Search".equals(buttonName))
-			return mImgSearchButton;
-
-		if ("Power".equals(buttonName))
-			return mImgPowerButton;
-
-		if ("Expand".equals(buttonName))
-			return mImgExpandButton;
-
-		if ("Custom".equals(buttonName))
-			return mImgCustomButton;
-
-		if ("Kill App".equals(buttonName))
-			return mImgKillAppButton;
-
-		if ("Space".equals(buttonName))
-			return mImgSpaceButton;
-
-		return null;
 	}
 }

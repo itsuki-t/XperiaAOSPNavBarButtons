@@ -4,7 +4,7 @@
     android:versionName="1.8" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="19" />
 
     <application
@@ -21,11 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ReorderActivity" >
-        </activity>
         <activity android:name=".ButtonSettingsActivity" >
         </activity>
-        <activity android:name=".CustomButton.AppListView" >
+        <activity android:name=".Buttons.CustomButton.AppListView" >
         </activity>
         
         <meta-data
@@ -37,7 +35,6 @@
         <meta-data
             android:name="xposeddescription"
             android:value="@string/xposeddescription" />
-            android:value="Modify NavBar buttons for Xperia/AOSP devices" />
     </application>
 
 </manifest>

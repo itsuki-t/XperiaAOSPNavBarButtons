@@ -1,16 +1,11 @@
 package com.gzplanet.xposed.xperianavbarbuttons;
 
-import android.content.res.Resources;
 import android.content.res.XResources;
-import android.view.Display;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 
 public class ModifyNavigationBar {
+	@SuppressWarnings("unused")
 	private static final String TAG = "ModifyNavigationBar";
 	
 	public static void initZygote(final XSharedPreferences prefs) {
