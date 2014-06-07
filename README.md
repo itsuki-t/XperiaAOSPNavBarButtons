@@ -11,7 +11,10 @@ Now you can add/remove the various buttons and reorder.
 3. Reboot the phone
 
 ##Features:
-1. Add and remove those button. (max six buttons)  
+1. Add and remove, reorder those button. (max six buttons)  
+ - Home
+ - Back
+     * LongPress : customizable
  - Recent App
  - Search
  - Menu
@@ -20,18 +23,26 @@ Now you can add/remove the various buttons and reorder.
      * LongPress : show power menu
  - Expand
      * Press : expand notification panel
-     * LongPress : collapse notification panel
+     * LongPress : customizable
  - Custom
      * Press : launch app you have selected
+	 * LongPress : customizable
  - Kill App
      * Press : kill foreground app  
      * LongPress : kill all app (same as "clear all" from recent app panel)  
  - Space
      * No action and no image button
-2. Reorder NavigationBar buttons
-3. Change NavigationBar height
+2. Change NavigationBar height
+3. Change longpress delay
 
 ## Change log:
+* Ver 1.8
+ - Add option to modify button longpress delay.
+ - Add option to modify button longpress action.
+ - Change statusbar expand button image.
+ - Add help button on actionbar in Button Settings screen. (under development)
+ - Fixed bug show navigationbar button when show power menu in lockscreen.
+ - Fixed bug show power menu twice when longpress power button.
 * Ver 1.7
  - Add kill foreground/all app button.
  - Add custom app icon to setting screen.

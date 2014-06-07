@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="nh_entries_list_preference">
         <item>52dip</item>
         <item>48dip (Default)</item>
@@ -10,7 +11,7 @@
         <item>28dip</item>
         <item>24dip</item>
         <item>20dip</item>
-        </string-array>
+    </string-array>
     <string-array name="nh_entryvalues_list_preference">
         <item>52</item>
         <item>48</item>
@@ -21,5 +22,22 @@
         <item>28</item>
         <item>24</item>
         <item>20</item>
-        </string-array>
+    </string-array>
+    <string-array name="lognpress_delay">
+        <item>0.5sec</item>
+        <item>1.0sec</item>
+        <item>1.5sec</item>
+        <item>2.0sec</item>
+        <item>2.5sec</item>
+        <item>3.0sec</item>
+    </string-array>
+    <string-array name="longpress_delay_value">
+        <item>500</item>
+        <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
+    </string-array>
+
 </resources>

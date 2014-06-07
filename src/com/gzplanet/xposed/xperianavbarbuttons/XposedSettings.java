@@ -46,11 +46,12 @@ public class XposedSettings extends PreferenceActivity {
 
 	String mCustomAppName;
 	String mCustomAppPackageName;
+	String mLongpressDelayString;
 	String mNavbarHeightString;
-	String mNavbarHeight;
 
 	Preference mPrefCustomButton;
 	Preference mPrefButtonSettings;
+	ListPreference mPrefLongpressDelay;
 	ListPreference mPrefNavibarHeight;
 	Preference mPrefRestartSystemUI;
 
@@ -75,7 +76,6 @@ public class XposedSettings extends PreferenceActivity {
 		String order = getPreferenceManager().getSharedPreferences().getString("pref_order", null);
 		mSettings = new ButtonSettings(this, order);
 		mButtonsCount = mSettings.mNavBarButton.getValueOfFlagIsTrue();
-		Log.d(TAG,"mButtonsCount:"+Integer.toString(mButtonsCount));
 
 		updatePreviewPanel();
 
@@ -128,6 +128,31 @@ public class XposedSettings extends PreferenceActivity {
 			}
 		});
 
+		mLongpressDelayString = sharedPreferences.getString("ld_e_list_preference", "Defaults");
+		mPrefLongpressDelay = (ListPreference) findPreference("ld_list_preference");
+		mPrefLongpressDelay.setSummary(getString(R.string.button_longpress_delay_summary,mLongpressDelayString));
+		mPrefLongpressDelay.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				CharSequence[] entries,entryValues;
+				String strEntries,strEntryValues;
+				int listId = 0;
+
+				if(newValue != null){
+					listId = mPrefLongpressDelay.findIndexOfValue((String) newValue);
+					entries = mPrefLongpressDelay.getEntries();
+					entryValues = mPrefLongpressDelay.getEntryValues();
+					strEntries = (String) entries[listId];
+					strEntryValues = (String) entryValues[listId];
+					getPreferenceManager().getSharedPreferences().edit().putString("ld_e_list_preference", strEntries).commit();
+					getPreferenceManager().getSharedPreferences().edit().putString("ld_ev_list_preference", strEntryValues).commit();
+					preference.setSummary(getString(R.string.button_longpress_delay_summary,strEntries));
+					return true;
+				}
+				return false;
+		      }
+		});
+
 		mNavbarHeightString = sharedPreferences.getString("nh_e_list_preference", "Defaults");
 		mPrefNavibarHeight = (ListPreference) findPreference("nh_list_preference");
 		mPrefNavibarHeight.setSummary("Current Height : "+ mNavbarHeightString);
@@ -163,7 +188,7 @@ public class XposedSettings extends PreferenceActivity {
 					final String pkgName = XposedSettings.this.getPackageName();
 					final String pkgFilename = pkgName + "_preferences";
 					final File prefFile = new File(Environment.getDataDirectory(), "data/" + pkgName + "/shared_prefs/" + pkgFilename + ".xml");
-					Log.d("XposedSettings", prefFile.getAbsolutePath());
+//					Log.d("XposedSettings", prefFile.getAbsolutePath());
 
 					// make shared preference world-readable
 					Process sh = Runtime.getRuntime().exec("su", null, null);

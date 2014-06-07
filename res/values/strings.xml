@@ -14,5 +14,8 @@
     <string name="kill_app">Kill foreground app.</string>
     <string name="kill_target_not_found">Kill app not found!</string>
     <string name="kill_all_background_app">Kill all app.</string>
+    <string name="no_previous_app">No previous app.</string>
+    <string name="button_longpress_delay_summary">Defines for how long button must be pressed to trigger longpress action.(current:%1$s)</string>
+    <string name="cant_modify_longpress">%1$s can\'t modify LONGPRESS action!</string>
 
 </resources>

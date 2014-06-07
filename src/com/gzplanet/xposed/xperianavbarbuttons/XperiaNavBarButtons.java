@@ -35,7 +35,6 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	public static final String PACKAGE_NAME = XperiaNavBarButtons.class.getPackage().getName();
 	public static final String CLASSNAME_SYSTEMUI = "com.android.systemui";
 	public static final String CLASSNAME_NAVIGATIONBARVIEW = "com.android.systemui.statusbar.phone.NavigationBarView";
-
 	private static String MODULE_PATH = null;
 	private final static String DEF_BUTTONS_ORDER_LIST = "Search,Recent,Back,Home,Menu,Power";
 
@@ -49,6 +48,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	public static XSharedPreferences pref;
 	int mDisabledFlags;
 	Boolean mNavigationBarCanMove;
+	public static Boolean STATUSBAR_EXPAND = false;
 
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
@@ -61,7 +61,7 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 		pref.makeWorldReadable();
 
 		// Initialize classes
-		ModifyButtonsAction.initZygote(pref);	
+		ModifyButtonsAction.initZygote(pref);
 		try {
 			ModifyNavigationBar.initZygote(pref);	
 		} catch (Throwable t) {
@@ -329,8 +329,9 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 
 							final View mCurrentView = (View) XposedHelpers.getObjectField(param.thisObject, "mCurrentView");
 
-							final View recentButton = mCurrentView.findViewById(mCurrentView.getResources().getIdentifier("recent_apps", "id",
-									CLASSNAME_SYSTEMUI));
+							final View homeButton = mCurrentView.findViewById(mCurrentView.getResources().getIdentifier("home", "id", CLASSNAME_SYSTEMUI));
+							final View backButton = mCurrentView.findViewById(mCurrentView.getResources().getIdentifier("back", "id", CLASSNAME_SYSTEMUI));
+							final View recentButton = mCurrentView.findViewById(mCurrentView.getResources().getIdentifier("recent_apps", "id", CLASSNAME_SYSTEMUI));
 							final View searchButton = mCurrentView.findViewWithTag("search");
 							final View menuButton = mCurrentView.findViewById(mCurrentView.getResources().getIdentifier("menu", "id", CLASSNAME_SYSTEMUI));
 							final View powerButton = mCurrentView.findViewWithTag("power");
@@ -342,34 +343,28 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 							if (!force && mDisabledFlags == disabledFlags)
 								return;
 
-							pref.reload();
-
 							final boolean disableRecent = (disabledFlags & View.STATUS_BAR_DISABLE_RECENT) != 0;
-							final boolean disableHome = (disabledFlags & View.STATUS_BAR_DISABLE_HOME) != 0;
 
+							if (homeButton != null)
+								homeButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
+							if (backButton != null)
+								backButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
 							if (searchButton != null)
-								searchButton.setVisibility(pref.getBoolean("pref_show_search", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
-										: View.GONE);
+								searchButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
 							if (menuButton != null)
-								menuButton.setVisibility(pref.getBoolean("pref_show_menu", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE) : View.GONE);
+								menuButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
 							if (recentButton != null)
-								recentButton.setVisibility(pref.getBoolean("pref_show_recent", true) ? (disableRecent ? View.INVISIBLE : View.VISIBLE)
-										: View.GONE);
+								recentButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
 							if (powerButton != null)
-								powerButton.setVisibility(pref.getBoolean("pref_show_power", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
-										: View.GONE);
+								powerButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
 							if (expandButton != null)
-								expandButton.setVisibility(pref.getBoolean("pref_show_expand", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
-										: View.GONE);	
+								expandButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);	
 							if (customButton != null)
-								customButton.setVisibility(pref.getBoolean("pref_show_custom", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
-										: View.GONE);	
+								customButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);	
 							if (killappButton != null)
-								killappButton.setVisibility(pref.getBoolean("pref_show_killapp", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
-										: View.GONE);	
+								killappButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);	
 							if (spaceButton != null)
-								spaceButton.setVisibility(pref.getBoolean("pref_show_space", true) ? (disableHome ? View.INVISIBLE : View.VISIBLE)
-										: View.GONE);
+								spaceButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);									
 						}
 					});
 		} catch (NoSuchMethodError e2) {
@@ -421,8 +416,12 @@ public class XperiaNavBarButtons implements IXposedHookZygoteInit, IXposedHookIn
 	}
 
 	KeyButtonView createButtonView(LayoutInflatedParam liparam, int width, int height, String glowBgResName, int imgResId, int code, String tag) {
-		KeyButtonView view = new KeyButtonView(mContext, code, true, liparam.res.getDrawable(liparam.res.getIdentifier(glowBgResName, "drawable",
-				CLASSNAME_SYSTEMUI)));
+		KeyButtonView view;
+		if(code == KeyEvent.KEYCODE_POWER){
+			view = new KeyButtonView(mContext, code, false, liparam.res.getDrawable(liparam.res.getIdentifier(glowBgResName, "drawable", CLASSNAME_SYSTEMUI)));
+		}else{
+			view = new KeyButtonView(mContext, code, true, liparam.res.getDrawable(liparam.res.getIdentifier(glowBgResName, "drawable", CLASSNAME_SYSTEMUI)));			
+		}
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height, 0.0f);
 		view.setLayoutParams(lp);
 		view.setImageDrawable(modRes.getDrawable(imgResId));

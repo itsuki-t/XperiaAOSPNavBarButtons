@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="Button Settings" >
+    <PreferenceCategory android:title="Restart SystemUI required" >
         <Preference
             android:icon="@drawable/ic_transparent"
             android:key="pref_custom_button"
-            android:layout="@layout/cutomapprow"
+            android:layout="@layout/customapprow"
             android:summary="Not selected"
             android:title="Custom Button App" />
         <Preference
@@ -13,7 +13,14 @@
             android:summary="NavigationBar button settings."
             android:title="Button settings" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="NavigationBar Settings (Reboot required)" >
+    <PreferenceCategory android:title="Reboot required" >    
+        <ListPreference
+            android:dialogTitle="Longpress delay"
+            android:entries="@array/lognpress_delay"
+            android:entryValues="@array/longpress_delay_value"
+            android:key="ld_list_preference"
+            android:summary="Defines for how long button must be pressed to trigger longpress action.(current:)"
+            android:title="Longpress delay" />
         <ListPreference
             android:dialogTitle="Navigationbar height"
             android:entries="@array/nh_entries_list_preference"

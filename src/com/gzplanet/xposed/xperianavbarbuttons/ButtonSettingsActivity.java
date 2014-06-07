@@ -2,12 +2,15 @@ package com.gzplanet.xposed.xperianavbarbuttons;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,19 +61,23 @@ public class ButtonSettingsActivity extends ListActivity {
 		setListAdapter(mAdapter);
 		tlv.setDropListener(onDrop);
 		tlv.setRemoveListener(onRemove);
-/*		
+		
 		tlv.setAdapter(mAdapter); 
 		tlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO 自動生成されたメソッド・スタブ
 				String item = mAdapter.getItem(position);
-				showButtonPressed(position,id);
-		    	Toast.makeText(ButtonSettingsActivity.this, String.format("%s selected", item), Toast.LENGTH_LONG).show();
+				String[] str = {"Home", "Recent", "Search", "Menu", "Power"};
+				List list = Arrays.asList(str);
+				if(!(list.contains(mItems.get(position)))){
+					showButtonPressed(mItems.get(position),position,id);
+				} else {
+			    	Toast.makeText(ButtonSettingsActivity.this, getString(R.string.cant_modify_longpress, item), Toast.LENGTH_LONG).show();					
+				}
 			}
 		});
-*/		
+		
 		tlv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -94,66 +101,86 @@ public class ButtonSettingsActivity extends ListActivity {
 			}
 		});	
 	}
-/*
-	public void showButtonPressed(int position, long id) {
-		final CharSequence[] Items =  {"Single Press","Long Press","Double Press"};
-		AlertDialog.Builder sbp = new AlertDialog.Builder(ButtonSettingsActivity.this);   
-		sbp.setTitle("Change Button Action");   
-		sbp.setItems(Items, new DialogInterface.OnClickListener(){
+
+	public void showButtonPressed(final String buttonName, int position, long id) {
+//		final CharSequence[] Items =  {"No Action","Open Google search","Open recent panel","Back","Return home","Menu open","Screen off","Expand notification panel","Collapse notification panel","Launch custom app","Kill foreground app"};
+		final CharSequence[] Items =  {"No Action","Expand notification panel","Collapse notification panel","Launch custom app","Kill foreground app","Kill all app","Launch previous app"};
+		final String prefLongpressOrgName = "pref_longpress_";
+		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sbt = new StringBuilder();
+		final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+		AlertDialog.Builder adb = new AlertDialog.Builder(ButtonSettingsActivity.this);
+		sbt.append(buttonName.toUpperCase());
+		sbt.append(" LONGPRESS ACTION\n(REBOOT REQUIRED)");
+		String diagTitle = sbt.toString();
+		adb.setTitle(diagTitle);
+		adb.setItems(Items, new DialogInterface.OnClickListener(){
 		    public void onClick(DialogInterface dialog, int which) {
-		    	Toast.makeText(ButtonSettingsActivity.this, String.format("%s Selected", Items[which]), Toast.LENGTH_LONG).show();
+				sb.append(prefLongpressOrgName);
+				sb.append(buttonName.toLowerCase().replaceAll(" ", ""));
+				String prefLongpressName = sb.toString();
+				sharedPreferences.edit().putString(prefLongpressName, String.format("%s",Items[which])).commit();
 		    }});
-		sbp.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){   
-			public void onClick(DialogInterface dialog, int which) {   
-				Toast.makeText(ButtonSettingsActivity.this, "Cancel", Toast.LENGTH_LONG).show();   
+		adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){   
+			public void onClick(DialogInterface dialog, int which) {
+//				Toast.makeText(ButtonSettingsActivity.this, "Cancel", Toast.LENGTH_LONG).show();
 			}});
-		sbp.setCancelable(false);
-		sbp.show();
+		adb.setCancelable(false);
+		adb.show();
 	}	
-*/	
+	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem actionItem = menu.add("Add Button");
-		actionItem.setIcon(android.R.drawable.ic_menu_add);
-		actionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+		MenuItem addButtonOption = menu.add(0, 0, 0, "Add Button");
+		MenuItem helpOption = menu.add(0, 1, 0, "Help");	    
+		addButtonOption.setIcon(android.R.drawable.ic_menu_add);
+		helpOption.setIcon(android.R.drawable.ic_menu_help);
+		addButtonOption.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		helpOption.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
     }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-//		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Custom","KillApp","Open Notifications"};
-		final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand","Custom","KillApp","Space"};
-		AlertDialog.Builder sab = new AlertDialog.Builder(ButtonSettingsActivity.this);   
-		sab.setTitle("Select add button");   
-		sab.setItems(Items, new DialogInterface.OnClickListener(){
-		    public void onClick(DialogInterface dialog, int which) {
-		    	boolean addFlg = true;
-				for (int i = 0; i < mItems.size(); i++) {
-					if (Items[which].equals(mItems.get(i))){
-						addFlg = false;
+		switch (item.getItemId()) {
+		case 0:
+			final CharSequence[] Items =  {"Search","Recent","Back","Home","Menu","Power","Expand","Custom","KillApp","Space"};
+			AlertDialog.Builder sab = new AlertDialog.Builder(ButtonSettingsActivity.this);   
+			sab.setTitle("Select add button");   
+			sab.setItems(Items, new DialogInterface.OnClickListener(){
+				public void onClick(DialogInterface dialog, int which) {
+					boolean addFlg = true;
+					for (int i = 0; i < mItems.size(); i++) {
+						if (Items[which].equals(mItems.get(i))){
+							addFlg = false;
+						}
 					}
-				}
-				if(mItems.size() != 6){				
-					if(addFlg){
-						mAdapter.add((String)Items[which]);
+					if(mItems.size() != 6){				
+						if(addFlg){
+							mAdapter.add((String)Items[which]);
+						}else{
+							Toast.makeText(ButtonSettingsActivity.this, getString(R.string.button_already_added_error, Items[which]), Toast.LENGTH_LONG).show();
+						}
 					}else{
-						Toast.makeText(ButtonSettingsActivity.this, getString(R.string.button_already_added_error, Items[which]), Toast.LENGTH_LONG).show();
+						Toast.makeText(ButtonSettingsActivity.this, getString(R.string.button_over_max_error), Toast.LENGTH_LONG).show();					
 					}
-				}else{
-					Toast.makeText(ButtonSettingsActivity.this, getString(R.string.button_over_max_error), Toast.LENGTH_LONG).show();					
 				}
-		    }
-		});
-		
-		sab.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){   
-			public void onClick(DialogInterface dialog, int which) {
-				// Action for add button menu canceled
-			}});
-		sab.setCancelable(false);
-		sab.show();
+			});
 
-		return true;
+			sab.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){   
+				public void onClick(DialogInterface dialog, int which) {
+					// Action for add button menu canceled
+				}});
+			sab.setCancelable(false);
+			sab.show();
+
+			return true;
+		case 1:
+			Toast.makeText(ButtonSettingsActivity.this, "Help pressed.", Toast.LENGTH_LONG).show();
+			return true;
+		}
+		return false;
 	}
     
 	@Override
@@ -194,6 +221,9 @@ public class ButtonSettingsActivity extends ListActivity {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			final String prefLongpressOrgName = "pref_longpress_";
+			final StringBuilder sb = new StringBuilder();
 			View row = convertView;
 
 			if (row == null) {
@@ -205,6 +235,25 @@ public class ButtonSettingsActivity extends ListActivity {
 			ImageView iv = (ImageView) row.findViewById(R.id.buttonimage);
 			label.setText(mItems.get(position));
 			iv.setImageDrawable(mNavBarButton.getButtonImage(mItems.get(position)));
+
+			TextView longpress = (TextView) row.findViewById(R.id.longpress);
+			String[] str = {"Home", "Recent", "Search", "Menu", "Power"};
+			List list = Arrays.asList(str);
+			if(!(list.contains(mItems.get(position)))){
+				longpress = (TextView) row.findViewById(R.id.longpress);
+				sb.append(prefLongpressOrgName);
+				sb.append(mItems.get(position).toLowerCase().replaceAll(" ", ""));
+				String prefName = sb.toString();
+				String longPressAction = sharedPreferences.getString(prefName,"");
+				if(longPressAction != ""){
+					longpress.setText("LONGPRESS : "+longPressAction);
+				} else {
+					longpress.setText("LONGPRESS : No Action");
+				}
+			} else {
+				longpress.setHeight(0);
+				longpress.setVisibility(View.INVISIBLE);
+			}			
 			return (row);
 		}
 	}
