@@ -34,6 +34,14 @@ Now you can add/remove the various buttons and reorder.
      * No action and no image button
 2. Change NavigationBar height
 3. Change longpress delay
+4. Modify longpress action (select those action).
+ - No action.
+ - Expand notification panel.
+ - Collapse notification panel.
+ - Launch custom app.
+ - Kill foreground app.
+ - Kill all app.
+ - Launch previous app.
 
 ## Change log:
 * Ver 1.8
